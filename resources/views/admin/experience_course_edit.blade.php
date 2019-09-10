@@ -21,23 +21,23 @@
         {{csrf_field()}}
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
-                <span class="x-red">*</span>加盟标题
+                <span class="x-red">*</span>课程名称
             </label>
             <div class="layui-input-inline" style="width: 280px;">
-                <input type="text" id="title" name="title" required="" lay-verify="required" value="{{$edit_data->title}}" autocomplete="off" class="layui-input">
+                <input type="text" id="name" name="name" required="" lay-verify="required" value="{{$edit_data->name}}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
-                <span class="x-red">*</span>副标题
+                <span class="x-red">*</span>课程简介
             </label>
             <div class="layui-input-inline" style="width: 280px;">
-                <input type="text" id="subtitle" name="subtitle" required="" lay-verify="required" value="{{$edit_data->subtitle}}" autocomplete="off" class="layui-input">
+                <input type="text" id="introduction" name="introduction" required="" value="{{$edit_data->introduction}}" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="phone" class="layui-form-label">
-                <span class="x-red">*</span>banner图
+                <span class="x-red">*</span>课程banner图
             </label>
             <div class="layui-input-inline" style="width: 800px;">
                 <div class="layui-upload">
@@ -56,18 +56,18 @@
                                 </tr>
                                 </thead>
                                 <tbody id="demoList">
-                                    @foreach ($edit_data->banner as $banner)
-                                        <tr id="upload-1568010458094-0">
-                                            <td>{{$banner['name']}}</td>
-                                            <td><img src="{{$banner['img']}}" /></td>
-                                            <td>{{$banner['size']}}</td>
-                                            <td><span style="color: #5FB878;">上传成功</span></td>
-                                            <td>
-                                                <button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>
-                                                <button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                @foreach ($edit_data->banner as $banner)
+                                    <tr id="upload-1568010458094-0">
+                                        <td>{{$banner['name']}}</td>
+                                        <td><img src="{{$banner['img']}}" /></td>
+                                        <td>{{$banner['size']}}</td>
+                                        <td><span style="color: #5FB878;">上传成功</span></td>
+                                        <td>
+                                            <button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>
+                                            <button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -86,15 +86,50 @@
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>排序
+            </label>
+            <div class="layui-input-inline" style="width: 68px;">
+                <input type="text" name="sort" placeholder="" required="" value="{{$edit_data->sort}}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>原价
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="original_price" placeholder="￥" required="" value="{{$edit_data->original_price}}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>体验价格
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="experience_price" placeholder="￥" required="" value="{{$edit_data->experience_price}}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>上下架
+            </label>
+            <div class="layui-input-inline" style="width: 280px;">
+                <input type="radio" name="status" value="1" title="上架" @if ($edit_data->status == 1) checked="" @endif>
+                <input type="radio" name="status" value="2" title="下架" @if ($edit_data->status == 2) checked="" @endif>
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <label for="L_repass" class="layui-form-label">
             </label>
-
-            <button class="layui-btn" lay-filter="edit" lay-submit="">
-                修改
+            <button  class="layui-btn" lay-filter="add" lay-submit="">
+                添加
             </button>
-            <button class="layui-btn" onclick="javascript :history.back(-1); return false;">
+            <button class="layui-btn" lay-filter="back" onclick="javascript :history.back(-1);">
                 返回
             </button>
         </div>
@@ -104,6 +139,7 @@
     var local_franchise_course_data = new Array();
 
     /*给banner图赋值*/
+
     var bannerArr = $("input[name=banner]").val();
     var bannerJson = JSON.parse(bannerArr);
 
@@ -129,19 +165,25 @@
             ,layer = layui.layer
             ,upload = layui.upload;
 
-
         //自定义验证规则
+        /*
         form.verify({
-            title: function(value){
+            username: function(value){
                 if(value.length < 6){
                     return '加盟标题至少得6个字符啊';
                 }
             }
+            ,pass: [/(.+){6,20}$/, '密码必须6到20位']
+            ,repass: function(value){
+                if($('#L_pass').val()!=$('#L_repass').val()){
+                    return '两次密码不一致';
+                }
+            }
         });
+        */
 
         //监听提交
-
-        form.on('submit(edit)', function(data) {
+        form.on('submit(add)', function(data) {
             //开启load，防止重复提交
             var index = layer.load();
 
@@ -154,7 +196,6 @@
                 layer.msg('请上传banner图');
                 return false;
             }
-
             var details = UE.getEditor('editor').getContent();
 
             if (details == '') {
@@ -169,7 +210,7 @@
             param_data.details = details;
 
             $.ajax({
-                url: "/admin/franchise_course/editPut/"+"{{$edit_data->id}}",
+                url: "/admin/experience_course/editPut/"+"{{$edit_data->id}}",
                 data: param_data,
                 type: "PUT",
                 dataType: "json",
@@ -179,7 +220,7 @@
                     if (res.code == 0) {
                         layer.msg('修改成功!', {icon: 1, time: 1000});
                         setTimeout(function () {
-                            window.location.href="/admin/franchise_course/list";
+                            window.location.href="/admin/experience_course/list";
                         }, 1100);
                     } else {
                         layer.msg(res.msg);

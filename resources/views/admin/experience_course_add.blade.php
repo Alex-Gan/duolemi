@@ -21,29 +21,28 @@
         {{csrf_field()}}
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
-                <span class="x-red">*</span>加盟标题
+                <span class="x-red">*</span>课程名称
             </label>
             <div class="layui-input-inline" style="width: 280px;">
-                <input type="text" id="title" name="title" required="" lay-verify="required" value="{{$edit_data->title}}" autocomplete="off" class="layui-input">
+                <input type="text" id="name" name="name" required="" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
-                <span class="x-red">*</span>副标题
+                <span class="x-red">*</span>课程简介
             </label>
             <div class="layui-input-inline" style="width: 280px;">
-                <input type="text" id="subtitle" name="subtitle" required="" lay-verify="required" value="{{$edit_data->subtitle}}" autocomplete="off" class="layui-input">
+                <input type="text" id="introduction" name="introduction" required="" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="phone" class="layui-form-label">
-                <span class="x-red">*</span>banner图
+                <span class="x-red">*</span>课程banner图
             </label>
             <div class="layui-input-inline" style="width: 800px;">
                 <div class="layui-upload">
-                    <input type="hidden" name="banner" value="{{$edit_data->banner_json}}">
                     <button type="button" class="layui-btn layui-btn-normal" id="testList">上传多图片</button>
-                    <div id="action_upload_imgs">
+                    <div id="action_upload_imgs" style="display: none;">
                         <div class="layui-upload-list" >
                             <table class="layui-table">
                                 <thead>
@@ -55,23 +54,10 @@
                                     <th>操作</th>
                                 </tr>
                                 </thead>
-                                <tbody id="demoList">
-                                    @foreach ($edit_data->banner as $banner)
-                                        <tr id="upload-1568010458094-0">
-                                            <td>{{$banner['name']}}</td>
-                                            <td><img src="{{$banner['img']}}" /></td>
-                                            <td>{{$banner['size']}}</td>
-                                            <td><span style="color: #5FB878;">上传成功</span></td>
-                                            <td>
-                                                <button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>
-                                                <button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                <tbody id="demoList"></tbody>
                             </table>
                         </div>
-                        <button type="button" class="layui-btn" id="testListAction" style="display: none;">开始上传</button>
+                        <button type="button" class="layui-btn" id="testListAction">开始上传</button>
                     </div>
                 </div>
             </div>
@@ -82,19 +68,53 @@
             </label>
             <div class="layui-input-inline">
                 <script id="editor" type="text/plain" style="width:800px;height:500px;"></script>
-                <input type="hidden" name="" value="{{$edit_data->details}}" id="editorValue">
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>排序
+            </label>
+            <div class="layui-input-inline" style="width: 68px;">
+                <input type="text" name="sort" placeholder="" required="" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>原价
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="original_price" placeholder="￥" required="" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>体验价格
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="experience_price" placeholder="￥" required="" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>上下架
+            </label>
+            <div class="layui-input-inline" style="width: 280px;">
+                <input type="radio" name="status" value="1" title="上架" checked="">
+                <input type="radio" name="status" value="2" title="下架">
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <label for="L_repass" class="layui-form-label">
             </label>
-
-            <button class="layui-btn" lay-filter="edit" lay-submit="">
-                修改
+            <button  class="layui-btn" lay-filter="add" lay-submit="">
+                添加
             </button>
-            <button class="layui-btn" onclick="javascript :history.back(-1); return false;">
+            <button class="layui-btn" lay-filter="back" onclick="javascript :history.back(-1);">
                 返回
             </button>
         </div>
@@ -103,20 +123,11 @@
 <script>
     var local_franchise_course_data = new Array();
 
-    /*给banner图赋值*/
-    var bannerArr = $("input[name=banner]").val();
-    var bannerJson = JSON.parse(bannerArr);
-
-    for (var i=0; i< bannerJson.length; i++) {
-        local_franchise_course_data.push(bannerJson[i]);
-    }
-
     //实例化编辑器
-    var ue = UE.getEditor('editor').addListener("ready", function () {
-        var htmlStr = $("#editorValue").val();
-        UE.getEditor('editor').setContent(htmlStr);
-    },{
-        allowDivTransToP:false
+    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    var ue = UE.getEditor('editor',{
+        initialFrameWidth:  800,  //初始化编辑器宽度,默认1000
+        initialFrameHeight: 500  //初始化编辑器高度,默认320
     });
 
     //获取token的值
@@ -129,19 +140,25 @@
             ,layer = layui.layer
             ,upload = layui.upload;
 
-
         //自定义验证规则
+        /*
         form.verify({
-            title: function(value){
+            username: function(value){
                 if(value.length < 6){
                     return '加盟标题至少得6个字符啊';
                 }
             }
+            ,pass: [/(.+){6,20}$/, '密码必须6到20位']
+            ,repass: function(value){
+                if($('#L_pass').val()!=$('#L_repass').val()){
+                    return '两次密码不一致';
+                }
+            }
         });
+        */
 
         //监听提交
-
-        form.on('submit(edit)', function(data) {
+        form.on('submit(add)', function(data) {
             //开启load，防止重复提交
             var index = layer.load();
 
@@ -154,8 +171,7 @@
                 layer.msg('请上传banner图');
                 return false;
             }
-
-            var details = UE.getEditor('editor').getContent();
+            var details = ue.getContent();
 
             if (details == '') {
                 layer.close(index);
@@ -169,17 +185,17 @@
             param_data.details = details;
 
             $.ajax({
-                url: "/admin/franchise_course/editPut/"+"{{$edit_data->id}}",
-                data: param_data,
-                type: "PUT",
+                url: "/admin/experience_course/add",
+                data: data.field,
+                type: "POST",
                 dataType: "json",
                 success:function(res) {
                     layer.close(index);
 
                     if (res.code == 0) {
-                        layer.msg('修改成功!', {icon: 1, time: 1000});
+                        layer.msg('添加成功!', {icon: 1, time: 1000});
                         setTimeout(function () {
-                            window.location.href="/admin/franchise_course/list";
+                            window.location.href="/admin/experience_course/list";
                         }, 1100);
                     } else {
                         layer.msg(res.msg);
@@ -207,7 +223,7 @@
             ,auto: false
             ,bindAction: '#testListAction'
             ,choose: function(obj){
-                $('#testListAction').show();
+                $('#action_upload_imgs').show();
                 var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
                 //读取本地文件
                 obj.preview(function(index, file, result){
