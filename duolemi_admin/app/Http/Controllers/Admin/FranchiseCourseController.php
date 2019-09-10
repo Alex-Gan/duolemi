@@ -24,7 +24,6 @@ class FranchiseCourseController extends BaseController
     public function __construct(FranchiseCourseService $franchiseCourseService)
     {
         $this->service = $franchiseCourseService;
-
     }
 
     /**

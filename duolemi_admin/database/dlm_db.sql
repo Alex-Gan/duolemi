@@ -19,7 +19,7 @@ CREATE TABLE `dlm_experience_course` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '课程名称',
   `introduction` varchar(255) NOT NULL DEFAULT '' COMMENT '课程简介',
-  `banner` json DEFAULT NULL DEFAULT '' COMMENT 'banner图，存json格式',
+  `banner` json DEFAULT NULL COMMENT 'banner图，存json格式',
   `details` text COMMENT '详情介绍',
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序，数字越大排名越靠前',
   `original_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '原价',
@@ -72,8 +72,8 @@ CREATE TABLE `dlm_purchase_history` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '体验课状态 1:已购买 2:已面试 3:正在体验 4:体验完成',
   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
-  PRIMARY KEY (`id`)
-  KEY `idx_name` (`name`)
+  PRIMARY KEY (`id`),
+  KEY `idx_name` (`name`),
   KEY `idx_mobile` (`mobile`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='购买记录表';
 
