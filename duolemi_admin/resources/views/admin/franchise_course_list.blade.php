@@ -11,11 +11,6 @@
 <style>
     a{text-decoration:none;}
     a:hover{text-decoration:none;/*指鼠标在链接*/}
-
-    /*溢出的字...处理*/
-    .updatecsssubstring {
-
-    }
 </style>
 
 <body>
