@@ -25,7 +25,7 @@ return [
                 'sid'   => 2,
                 'sname' => '体验课程列表',
                 'sicon' => '',
-                'srule' => ''
+                'srule' => '/admin/experience_course/list'
             ]
         ]
     ],
@@ -38,7 +38,7 @@ return [
                'sid'  => 1,
                'sname' => '购买记录',
                'sicon' => '',
-               'srule' => ''
+               'srule' => '/admin/purchase_history/list'
            ]
         ]
     ],
@@ -51,7 +51,7 @@ return [
                'sid'  => 1,
                'sname' => '推广员列表',
                'sicon' => '',
-               'srule' => ''
+               'srule' => '/admin/promoter/list'
            ]
         ]
     ],
