@@ -64,7 +64,7 @@ return [
                'sid'  => 1,
                'sname' => '会员列表',
                'sicon' => '',
-               'srule' => ''
+               'srule' => '/admin/member/list'
            ]
         ]
     ],
@@ -77,7 +77,7 @@ return [
                 'sid'  => 1,
                 'sname' => '加盟申请记录列表',
                 'sicon' => '',
-                'srule' => ''
+                'srule' => '/admin/franchise_apply/list'
             ]
         ]
     ],
@@ -90,7 +90,7 @@ return [
                'sid'  => 1,
                'sname' => '提现列表',
                'sicon' => '',
-               'srule' => ''
+               'srule' => '/admin/withdraw/list'
            ]
         ]
     ],
@@ -103,7 +103,20 @@ return [
                 'sid'  => 1,
                 'sname' => '轮播图列表',
                 'sicon' => '',
-                'srule' => ''
+                'srule' => '/admin/banner/list'
+            ]
+        ]
+    ],
+    [
+        'id' => 9,
+        'name' => '系统管理',
+        'icon' => '',
+        'sub_menu' => [
+            [
+                'sid'  => 1,
+                'sname' => '系统设置',
+                'sicon' => '',
+                'srule' => '/admin/settings/list'
             ]
         ]
     ],
