@@ -50,12 +50,12 @@
                     success:function(res) {
                         layer.close(index);
                         if (res.code == 0) {
-                            layer.msg(res.msg);
+                            layer.msg(res.msg, {icon: 1, time: 1500});
                             setInterval(function () {
                                 location.href = '/admin/index'
                             }, 1000);
                         } else {
-                            layer.msg(res.msg);
+                            layer.msg(res.msg, {icon: 2, time: 1500});
                             return false;
                         }
                     },

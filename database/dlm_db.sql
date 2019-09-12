@@ -108,7 +108,7 @@ CREATE TABLE `dlm_withdraw` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='提现表';
 
 
--- 轮播图
+-- 轮播图表
 DROP TABLE IF EXISTS `dlm_banner`;
 CREATE TABLE `dlm_banner` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -118,7 +118,7 @@ CREATE TABLE `dlm_banner` (
   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='提现表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='轮播图表';
 
 
 -- 管理员表
@@ -130,8 +130,47 @@ CREATE TABLE `dlm_admin` (
   `password` varchar(32) NOT NULL DEFAULT '' COMMENT '密码',
   `salt` varchar(30) NOT NULL DEFAULT '' COMMENT '密码盐',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1、正常 2、禁用 -1、删除',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='管理员表';
+
+-- 设置表
+DROP TABLE IF EXISTS `dlm_settings`;
+CREATE TABLE `dlm_settings` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '设置名称',
+  `key` varchar(255) NOT NULL DEFAULT '' COMMENT '配置key',
+  `value` varchar(255) NOT NULL DEFAULT '' COMMENT '配置value',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
+  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='设置表';
+
+-- 导航设置表
+DROP TABLE IF EXISTS `dlm_navigation_settings`;
+CREATE TABLE `dlm_navigation_settings` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '导航名称',
+  `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '导航图标',
+  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '导航类型 1、内容页 2、小程序跳转 3、电话拨打',
+  `type_relation` varchar(100) NOT NULL DEFAULT '' COMMENT '导航目标',
+  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='导航设置表';
+
+
+-- 文章表
+DROP TABLE IF EXISTS `dlm_article`;
+CREATE TABLE `dlm_article` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+  `content` text COMMENT '详情介绍',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
+   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='文章表';

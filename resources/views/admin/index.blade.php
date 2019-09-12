@@ -12,7 +12,7 @@
         <li class="layui-nav-item">
             <a href="javascript:;">{{$username}}</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                <dd><a onclick="x_admin_show('个人信息','http://www.baidu.com')">个人信息</a></dd>
+                <dd><a onclick="x_admin_show('个人信息', '/admin/modify', 550, 368)">个人信息</a></dd>
                 <dd><a href="javascript:;" id="login">退出</a></dd>
             </dl>
         </li>
