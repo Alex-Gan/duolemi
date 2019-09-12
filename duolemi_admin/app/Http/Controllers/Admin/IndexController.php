@@ -40,16 +40,4 @@ class IndexController extends BaseController
 
         return View('admin/home', $userData);
     }
-
-    /**
-     * 从session中获取登录用户信息
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    private function getUserData($request)
-    {
-        //获取登录信息session
-        return $request->session()->get("sess_admin_user_key");
-    }
 }
