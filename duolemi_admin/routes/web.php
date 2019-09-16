@@ -69,8 +69,21 @@ Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
     Route::delete('banner/delete','Admin\BannerController@delete'); //删除轮播图
 
     //系统设置相关的路由
-    Route::get('settings/list','Admin\SettingsController@list'); //系统设置
-    Route::put('settings/set','Admin\SettingsController@set'); //系统设置
+    Route::get('settings/list','Admin\SettingsController@list'); //获取系统设置
+    Route::put('settings/set','Admin\SettingsController@set'); //设置系统设置
+
+    //导航设置相关的路由
+    Route::get('navigation_settings/list','Admin\NavigationSettingsController@list'); //导航设置列表
+    Route::get('navigation_settings/edit/{id}','Admin\NavigationSettingsController@editView'); //导航设置编辑页
+
+    //文章管理相关的路由
+    Route::get('article/list','Admin\ArticleController@list'); //文章列表
+    Route::get('article/add','Admin\ArticleController@addView'); //添加文章视图
+    Route::post('article/add','Admin\ArticleController@add'); //添加文章
+    Route::get('article/edit/{id}','Admin\ArticleController@editView'); //编辑文章页面
+    Route::put('article/editPut/{id}','Admin\ArticleController@editPut'); //编辑文章
+    Route::delete('article/delete','Admin\ArticleController@delete'); //删除轮播图
+
 
     //图片上传相关的路由
     Route::post('upload/multi_upload','Common\UploadImageController@upload');

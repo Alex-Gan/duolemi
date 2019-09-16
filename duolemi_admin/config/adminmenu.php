@@ -120,4 +120,30 @@ return [
             ]
         ]
     ],
+    [
+        'id' => 10,
+        'name' => '导航设置管理',
+        'icon' => '',
+        'sub_menu' => [
+            [
+                'sid'  => 1,
+                'sname' => '导航设置列表',
+                'sicon' => '',
+                'srule' => '/admin/navigation_settings/list'
+            ]
+        ]
+    ],
+    [
+        'id' => 11,
+        'name' => '文章管理',
+        'icon' => '',
+        'sub_menu' => [
+            [
+                'sid'  => 1,
+                'sname' => '文章列表',
+                'sicon' => '',
+                'srule' => '/admin/article/list'
+            ]
+        ]
+    ]
 ];
