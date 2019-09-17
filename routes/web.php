@@ -12,7 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    echo 'hello，多乐米...';
+    //return view('welcome');
 });
 
 Route::get('/test', 'Api\TestController@testToekn');
