@@ -53,7 +53,9 @@
                 <tr>
                     <td>{{$item->id}}</td>
                     <td>{{$item->name}}</td>
-                    <td>{{$item->mobile}}</td>
+                    <td>
+                        <img width="64" height="64" src="{{$item->icon}}"/>
+                    </td>
                     <td>{{$item->status_text}}</td>
                     <td>{{$item->type_relation}}</td>
                     <td class="td-manage">
@@ -64,7 +66,7 @@
                 </tr>
             @endforeach
             @else
-            <tr style="text-align: center;"><td colspan="7">暂无数据</td></tr>
+            <tr style="text-align: center;"><td colspan="6">暂无数据</td></tr>
             @endif
         </tbody>
     </table>
@@ -74,7 +76,7 @@
 <script>
     layui.use('laypage', function(){
 
-        var url = '/admin/purchase_history/list?'+"{{$data['_query']}}";
+        var url = '/admin/navigation_settings/list?'+"{{$data['_query']}}";
 
         var laypage = layui.laypage;
 
@@ -99,7 +101,7 @@
         var form = layui.form;
         //监听提交
         form.on('submit(sreach)', function(data){
-            location.href = '/admin/purchase_history/list?name=' + data.field.name +'&mobile=' + data.field.mobile+'&status='+data.field.status;
+            location.href = '/admin/navigation_settings/list?name=' + data.field.name +'&mobile=' + data.field.mobile+'&status='+data.field.status;
         });
     });
 

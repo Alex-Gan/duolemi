@@ -46,4 +46,16 @@ class NavigationSettingsController extends BaseController
 
         return view('admin/navigation_settings_edit', ['data' => $data]);
     }
+
+    /**
+     * 编辑导航设置
+     *
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
+    public function editPut($id, Request $request)
+    {
+        return $this->service->editPut($id, $request->input());
+    }
 }

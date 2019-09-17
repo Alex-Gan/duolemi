@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
     //导航设置相关的路由
     Route::get('navigation_settings/list','Admin\NavigationSettingsController@list'); //导航设置列表
     Route::get('navigation_settings/edit/{id}','Admin\NavigationSettingsController@editView'); //导航设置编辑页
+    Route::put('navigation_settings/editPut/{id}','Admin\NavigationSettingsController@editPut'); //编辑导航设置
 
     //文章管理相关的路由
     Route::get('article/list','Admin\ArticleController@list'); //文章列表

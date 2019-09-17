@@ -24,24 +24,19 @@
                 <span class="x-red">*</span>导航名称
             </label>
             <div class="layui-input-inline" style="width: 280px;">
-                <input type="text" id="title" name="title" required="" lay-verify="required" value="{{$data->name}}" autocomplete="off" class="layui-input">
+                <input type="text" id="name" name="name" required="" lay-verify="required" value="{{$data->name}}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
                 <span class="x-red">*</span>导航图标
             </label>
-            <!--
-            <div class="layui-input-inline" style="width: 280px;">
-                <input type="text" id="subtitle" name="subtitle" required="" lay-verify="required" value="" autocomplete="off" class="layui-input">
-            </div>
-            -->
             <div class="layui-input-inline" style="width: 280px;">
                 <div class="layui-upload">
                     <button type="button" class="layui-btn" id="test1">上传图片</button>
                     <div class="layui-upload-list">
-                        <img class="layui-upload-img" style="width: 64px; height: 64px;" id="demo1">
-                        <input type="hidden" id="image" name="image" value=""/>
+                        <img class="layui-upload-img" style="width: 64px; height: 64px;" id="demo1" src="{{$data->icon}}">
+                        <input type="hidden" id="icon" name="icon" value="{{$data->icon}}"/>
                         <p id="demoText"></p>
                     </div>
                 </div>
@@ -65,9 +60,9 @@
                 <span class="x-red">*</span>内容页
             </label>
             <div class="layui-input-inline">
-                <select name="type" lay-verify="required" lay-search="" lay-filter="type">
+                <select name="content_val" lay-verify="required" lay-search="" lay-filter="type">
                     @foreach ($data->article_data as $item)
-                        <option value="{{$item->title}}">{{$item->title}}</option>
+                        <option value="{{$item->id}}">{{$item->title}}</option>
                     @endforeach
                 </select>
             </div>
@@ -77,7 +72,7 @@
                 <span class="x-red">*</span>小程序页面
             </label>
             <div class="layui-input-inline">
-                <select name="type" lay-verify="required" lay-search="" lay-filter="type">
+                <select name="small_program_val" lay-verify="required" lay-search="" lay-filter="small_program">
                     @foreach ($data->small_program_page_data as $item)
                         <option value="{{$item['path']}}">{{$item['title']}}</option>
                     @endforeach
@@ -89,7 +84,7 @@
                 <span class="x-red">*</span>拨打电话
             </label>
             <div class="layui-input-inline" style="width: 280px;">
-                <input type="text" id="subtitle" name="subtitle" required="" lay-verify="required" value="" autocomplete="off" class="layui-input">
+                <input type="text" id="call_phone_value" name="call_phone_val" required="" value="" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -120,6 +115,7 @@
 
 
         //自定义验证规则
+        /*
         form.verify({
             title: function(value){
                 if(value.length < 6){
@@ -127,6 +123,7 @@
                 }
             }
         });
+        */
 
         //监听提交
 
@@ -136,29 +133,14 @@
 
             var param_data = data.field;
 
-            //banner图
-            var banner = local_franchise_course_data;
-            if (banner == '') {
+            if (param_data.icon == "") {
                 layer.close(index);
-                layer.msg('请上传banner图');
+                layer.msg('请上传导航图标', {icon: 2, time: 1000});
                 return false;
             }
-
-            var details = UE.getEditor('editor').getContent();
-
-            if (details == '') {
-                layer.close(index);
-                layer.msg('请填写详情介绍');
-                return false;
-            }
-
-            //将banner图存入数组中
-            param_data.banner = banner;
-
-            param_data.details = details;
 
             $.ajax({
-                url: "/admin/franchise_course/editPut/",
+                url: "/admin/navigation_settings/editPut/"+"{{$data->id}}",
                 data: param_data,
                 type: "PUT",
                 dataType: "json",
@@ -168,7 +150,7 @@
                     if (res.code == 0) {
                         layer.msg('修改成功!', {icon: 1, time: 1000});
                         setTimeout(function () {
-                            window.location.href="/admin/franchise_course/list";
+                            window.location.href="/admin/navigation_settings/list";
                         }, 1100);
                     } else {
                         layer.msg(res.msg);
@@ -204,7 +186,7 @@
                     return layer.msg('上传失败');
                 }
                 //上传成功，并回显
-                $("#image").val(res.data.img);
+                $("#icon").val(res.data.img);
             }
             ,error: function(){
                 //演示失败状态，并实现重传
@@ -235,8 +217,6 @@
                 $("#small_program_page").hide();
                 $("#call_phone_page").show();
             }
-
-            //console.log(data.value); //得到被选中的值
         });
     });
 </script>
