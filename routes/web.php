@@ -20,12 +20,14 @@ Route::get('/test', 'Api\TestController@testToekn');
 /*
  * 后台模块相关路由
  */
+Route::get('/admin','Admin\LoginController@loginView');
 Route::get('/admin/login','Admin\LoginController@loginView'); //登录页面
 Route::post('/admin/login','Admin\LoginController@login'); //登录
 Route::get('/admin/logout','Admin\LoginController@logout'); //退出
 
 /*************************以下路由需要登录才能访问******************************/
 Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
+
     //首页模块相关路由
     Route::get('index', 'Admin\IndexController@index'); //首页
     Route::get('home', 'Admin\IndexController@home'); //我的桌面
