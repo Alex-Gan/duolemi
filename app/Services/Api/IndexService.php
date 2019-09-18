@@ -57,7 +57,7 @@ class IndexService extends BaseService
      */
     private function getLeagueCourse()
     {
-        $franchise_course = FranchiseCourse::select(['id', 'banner', 'details as content'])
+        $franchise_course = FranchiseCourse::select(['id', 'banner', 'subtitle as content'])
             ->where('is_delete', 0)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -66,9 +66,6 @@ class IndexService extends BaseService
             $banner_arr = json_decode($item['banner'], true);
             unset($item['banner']);
             $item['img'] = $banner_arr[0]['img'];
-
-            //详情内容
-            $item['content'] = stripslashes($item['content']);
         }
 
         return $franchise_course;
@@ -81,7 +78,7 @@ class IndexService extends BaseService
      */
     private function getFreeCourse()
     {
-        $experience_course = ExperienceCourse::select(['id', 'banner', 'details as content'])
+        $experience_course = ExperienceCourse::select(['id', 'banner', 'introduction as content'])
             ->where('is_delete', 0)
             ->where('status', 1)
             ->orderBy('created_at', 'desc')
@@ -91,9 +88,6 @@ class IndexService extends BaseService
             $banner_arr = json_decode($item['banner'], true);
             unset($item['banner']);
             $item['img'] = $banner_arr[0]['img'];
-
-            //详情内容
-            $item['content'] = stripslashes($item['content']);
         }
 
         return $experience_course;
