@@ -37,7 +37,38 @@
             <input type="text" id="sort" name="sort"  required="" value="0" lay-verify="required|nickname" autocomplete="off" class="layui-input">
         </div>
     </div>
+    <div class="layui-form-item">
+        <label for="username" class="layui-form-label">
+            <span class="x-red">*</span>导航类型
+        </label>
+        <div class="layui-input-inline">
+            <select name="type" id="type" lay-verify="required" lay-search="" lay-filter="type" style="height: 30px;">
+                <option value="0">无</option>
+                <option value="1">体验课程</option>
+                <option value="2">加盟课程</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item" id="experience_course_page" style="display: none;">
+        <label for="username" class="layui-form-label">
+            <span class="x-red">*</span>体验课程
+        </label>
+        <div class="layui-input-inline">
+            <select name="content_val1" lay-verify="required" lay-search="" lay-filter="type1" style="height: 30px;">
 
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item" id="franchise_course_page" style="display: none;">
+        <label for="username" class="layui-form-label">
+            <span class="x-red">*</span>加盟课程
+        </label>
+        <div class="layui-input-inline">
+            <select name="content_val2" lay-verify="required" lay-search="" lay-filter="type2" style="height: 30px;">
+
+            </select>
+        </div>
+    </div>
     <div class="layui-form-item">
         <label for="L_repass" class="layui-form-label">
         </label>
@@ -93,6 +124,30 @@
                 */
             }
         });
+
+        /*导航类型更改*/
+        /*
+        form.on('select(type)', function(data){
+            var type_val = data.value;
+
+            alert(type_val);
+            return false;
+
+            if (type_val == 1) {
+                $("#content_page").show();
+                $("#small_program_page").hide();
+                $("#call_phone_page").hide();
+            } else if(type_val == 2) {
+                $("#content_page").hide();
+                $("#small_program_page").show();
+                $("#call_phone_page").hide();
+            } else if(type_val == 3) {
+                $("#content_page").hide();
+                $("#small_program_page").hide();
+                $("#call_phone_page").show();
+            }
+        });
+        */
     });
 
     $(function () {
@@ -142,6 +197,21 @@
                     $.messager.alert('错误',data.msg);
                 }
             });
+        });
+
+        $("#type").change(function () {
+            var type_val = $("#type").val();
+
+            if (type_val == 0) {
+                $("#experience_course_page").hide();
+                $("#franchise_course_page").hide();
+            } else if(type_val == 1) {
+                $("#experience_course_page").show();
+                $("#franchise_course_page").hide();
+            } else if(type_val == 2) {
+                $("#experience_course_page").hide();
+                $("#franchise_course_page").show();
+            }
         });
     });
 </script>

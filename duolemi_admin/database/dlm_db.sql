@@ -39,6 +39,7 @@ CREATE TABLE `dlm_member` (
   `openid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '微信唯一标识',
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '会员昵称',
   `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '会员头像',
+  `mobile` varchar(20) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '手机号',
   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
   PRIMARY KEY (`id`)
@@ -113,6 +114,8 @@ DROP TABLE IF EXISTS `dlm_banner`;
 CREATE TABLE `dlm_banner` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `image` varchar(255) NOT NULL DEFAULT '' COMMENT '轮播图地址',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '导航类型 0、纯图片 1、体验课程 2、加盟课程',
+  `type_relation_id` int(10) NOT NULL DEFAULT '0' COMMENT '导航目标ID',
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序，数字越大排名越靠前',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',

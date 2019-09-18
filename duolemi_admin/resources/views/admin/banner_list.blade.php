@@ -28,7 +28,7 @@
 <div class="x-body">
     @if (count($data['data']) < 5)
     <xblock>
-        <button class="layui-btn" onclick="x_admin_show('添加轮播图', '/admin/banner/add', 550, 368)">
+        <button class="layui-btn" onclick="x_admin_show('添加轮播图', '/admin/banner/add', 480, 500)">
             <i class="layui-icon"></i>添加
         </button>
     </xblock>
