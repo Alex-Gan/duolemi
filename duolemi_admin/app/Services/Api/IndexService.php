@@ -65,7 +65,10 @@ class IndexService extends BaseService
         foreach ($franchise_course as &$item) {
             $banner_arr = json_decode($item['banner'], true);
             unset($item['banner']);
-            $item['img'] = $banner_arr[0];
+            $item['img'] = $banner_arr[0]['img'];
+
+            //详情内容
+            $item['content'] = stripslashes($item['content']);
         }
 
         return $franchise_course;
@@ -87,7 +90,10 @@ class IndexService extends BaseService
         foreach ($experience_course as &$item) {
             $banner_arr = json_decode($item['banner'], true);
             unset($item['banner']);
-            $item['img'] = $banner_arr[0];
+            $item['img'] = $banner_arr[0]['img'];
+
+            //详情内容
+            $item['content'] = stripslashes($item['content']);
         }
 
         return $experience_course;
