@@ -28,7 +28,8 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('index', 'IndexController@getIndexData'); //首页页面对应的数据
     Route::post('leagueDetail', 'LeagueController@leagueDetail'); //加盟课程详情
     Route::post('leagueApply', 'LeagueController@leagueApply'); //申请加盟
-    Route::post('freeCourseDetail', 'IndexController@freeCourseDetail'); //体验课详情
+    Route::post('freeCourseDetail', 'FreeCourseController@freeCourseDetail'); //体验课详情
+    Route::post('freeCoursePay', 'FreeCourseController@freeCoursePay'); //支付体验课
 
 
     //个人信息相关的路由
