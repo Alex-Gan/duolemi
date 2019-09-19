@@ -50,5 +50,10 @@ class FreeCourseController
         return $this->service->notifyUrl();
     }
 
+    public function test()
+    {
+        return $this->service->test();
+    }
+
 
 }

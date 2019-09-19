@@ -32,6 +32,8 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('freeCoursePay', 'FreeCourseController@freeCoursePay'); //支付体验课
     Route::post('notify_url', 'FreeCourseController@notifyUrl'); //支付结果通知
 
+    Route::get('test', 'FreeCourseController@test');
+
 
     //个人信息相关的路由
     Route::post('login', 'PersonalDataController@getPersonalOpenIdByCode'); //微信code换取身份openid
