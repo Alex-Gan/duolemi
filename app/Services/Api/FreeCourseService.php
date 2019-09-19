@@ -114,7 +114,7 @@ class FreeCourseService extends BaseService
         $wx_pay_sign_data = [
             'openid' => $openid,
             'total_fee' => $experience_course_data['experience_price'],
-            'attach' => json_encode($attach),
+            'attach' => serialize($attach),
         ];
 
         /*进行支付*/
@@ -186,6 +186,15 @@ class FreeCourseService extends BaseService
                 }
             }
         }
+
+        /*通知微信支付成功*/
+        $response_data = array(
+            'return_code' => 'SUCCESS',
+            'return_msg'  => 'OK'
+        );
+
+        $response_xml_data = $this->ToXml($response_data);
+        echo $response_xml_data;exit;
     }
 
     /**
@@ -211,7 +220,10 @@ class FreeCourseService extends BaseService
 
     public function test()
     {
-        $response_json  = '{"appid":"wxc56da5478d843331","attach":"{\"openid\":\"oeGsr5JJzSBAmtIZZMUvI9US095E\",\"experience_course_id\":1,\"name\":\"1\",\"mobile\":\"15000319670\"}","bank_type":"CFT","cash_fee":"1","fee_type":"CNY","is_subscribe":"N","mch_id":"1378450802","nonce_str":"w05eepgwb98s0fl1hcudbm5630sowc1w","openid":"oeGsr5JJzSBAmtIZZMUvI9US095E","out_trade_no":"D20190919200232828","result_code":"SUCCESS","return_code":"SUCCESS","sign":"EDE16CFAB3C9DD578D02BF5E7E424EFD","time_end":"20190919200245","total_fee":"1","trade_type":"JSAPI","transaction_id":"4200000385201909193629775579"}';
+        $aa = serialize(['name'=>'甘超胜', 'mobile' => '15000319670']);
+        dd(unserialize($aa));
+
+        $response_json  = '{"appid":"wxc56da5478d843331","bank_type":"CFT","cash_fee":"1","fee_type":"CNY","is_subscribe":"N","mch_id":"1378450802","nonce_str":"dtrtwybnehgjphl7pdbrrkyztc2ysg9c","openid":"oeGsr5JJzSBAmtIZZMUvI9US095E","out_trade_no":"D201909192007513855","result_code":"SUCCESS","return_code":"SUCCESS","sign":"D4CEA4FE400118F55E4D35738C3726E2","time_end":"20190919200802","total_fee":"1","trade_type":"JSAPI","transaction_id":"4200000385201909191496263592"}';
 
         $response_arr = json_decode($response_json, true);
 
@@ -239,8 +251,8 @@ class FreeCourseService extends BaseService
             ];
 
             //生成sign
-            $sign = (new WxPayService())->MakeSign($response_sign_arr); //67729B76203C5D7883BBFFEBA2BAB634
-            //dd($response_arr);
+            $sign = (new WxPayService())->MakeSign($response_sign_arr); //D4CEA4FE400118F55E4D35738C3726E2 D4CEA4FE400118F55E4D35738C3726E2
+            dd($sign);
             echo $sign;
             echo "<hr/>";
             echo $response_arr['sign'];
