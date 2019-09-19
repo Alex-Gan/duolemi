@@ -19,14 +19,13 @@ class PersonalDataService extends BaseService
         //开始进行授权
         $authorize_data = $this->authorizeData($code);
 
-        if ($authorize_data == 0) { //成功
-            $response_data = [
-                'openid' => $authorize_data['openid'],
-                'session_key' => $authorize_data['session_key'],
-            ];
-            return $this->formatResponse(200, 'ok', $response_data);
-        } else { //失败
+        if (isset($authorize_data['errcode'])) {
             return $this->formatResponse($authorize_data['errcode'], $authorize_data['errmsg']);
+        } else {
+            $response_data = [
+                'openid' => $authorize_data['openid']
+            ];
+            return $this->formatResponse(0, 'ok', $response_data);
         }
     }
 

@@ -36,6 +36,7 @@ class PersonalDataController
      * 同步微信用户信息到服务端
      *
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function syncPersonalData(Request $request)
     {
