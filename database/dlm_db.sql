@@ -7,8 +7,8 @@ CREATE TABLE `dlm_franchise_course` (
   `banner` json DEFAULT NULL COMMENT 'banner图，存json格式',
   `details` text COMMENT '详情介绍',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
+  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='加盟课表';
 
@@ -26,8 +26,8 @@ CREATE TABLE `dlm_experience_course` (
   `experience_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '体验价',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '上下架 1:上架 2:下架',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
+  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='体验课程表';
 
@@ -40,8 +40,8 @@ CREATE TABLE `dlm_member` (
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '会员昵称',
   `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '会员头像',
   `mobile` varchar(20) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '手机号',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
+  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='会员表';
 
@@ -57,7 +57,7 @@ CREATE TABLE `dlm_promoter` (
   `no_settled_commission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '待结算佣金',
   `commission_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金余额',
   `total_withdraw` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计提现',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '加入时间',
+  `created_at` datetime NULL DEFAULT '' COMMENT '加入时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='推广员表';
 
@@ -66,13 +66,15 @@ CREATE TABLE `dlm_promoter` (
 DROP TABLE IF EXISTS `dlm_purchase_history`;
 CREATE TABLE `dlm_purchase_history` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `experience_course_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '体验课ID',
   `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '会员头像',
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '会员昵称',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '名称',
   `mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '体验课状态 1:已购买 2:已面试 3:正在体验 4:体验完成',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
+  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
   PRIMARY KEY (`id`),
   KEY `idx_name` (`name`),
   KEY `idx_mobile` (`mobile`)
@@ -83,13 +85,21 @@ CREATE TABLE `dlm_purchase_history` (
 DROP TABLE IF EXISTS `dlm_franchise_apply`;
 CREATE TABLE `dlm_franchise_apply` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `franchise_course_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '加盟课程ID',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '名称',
   `mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号',
-  `apple_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '申请时间',
-  `lately_handle_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最近处理时间',
+  `sex` tinyint(1) NOT NULL DEFAULT '0' COMMENT '性别 0：男 1：女',
+  `age` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '年龄',
+  `province` varchar(50) NOT NULL DEFAULT '' COMMENT '省',
+  `city` varchar(50) NOT NULL DEFAULT '' COMMENT '市',
+  `area` varchar(50) NOT NULL DEFAULT '' COMMENT '区',
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `apple_at` datetime DEFAULT NULL COMMENT '申请时间',
+  `lately_handle_at` datetime DEFAULT NULL COMMENT '最近处理时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '加盟进度状态 1:信息已提交 2:资质已审核 3:教师培训 4:已开课 5:加盟完成 6:已结算返佣',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='加盟申请记录表';
 
@@ -101,10 +111,10 @@ CREATE TABLE `dlm_withdraw` (
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '姓名',
   `mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号',
   `amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '金额',
-  `withdraw_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '提现时间',
+  `withdraw_at` datetime DEFAULT NULL COMMENT '提现时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1:待审核 2:已审核',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='提现表';
 
@@ -118,8 +128,8 @@ CREATE TABLE `dlm_banner` (
   `type_relation_id` int(10) NOT NULL DEFAULT '0' COMMENT '导航目标ID',
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序，数字越大排名越靠前',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='轮播图表';
 
@@ -133,8 +143,8 @@ CREATE TABLE `dlm_admin` (
   `password` varchar(32) NOT NULL DEFAULT '' COMMENT '密码',
   `salt` varchar(30) NOT NULL DEFAULT '' COMMENT '密码盐',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1、正常 2、禁用 -1、删除',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='管理员表';
@@ -147,8 +157,8 @@ CREATE TABLE `dlm_settings` (
   `key` varchar(255) NOT NULL DEFAULT '' COMMENT '配置key',
   `value` varchar(255) NOT NULL DEFAULT '' COMMENT '配置value',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='设置表';
 
@@ -160,8 +170,8 @@ CREATE TABLE `dlm_navigation_settings` (
   `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '导航图标',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '导航类型 1、内容页 2、小程序跳转 3、电话拨打',
   `type_relation` varchar(100) NOT NULL DEFAULT '' COMMENT '导航目标',
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='导航设置表';
 
@@ -173,7 +183,7 @@ CREATE TABLE `dlm_article` (
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
   `content` text COMMENT '详情介绍',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-   `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更改时间',
+   `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
+  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='文章表';
