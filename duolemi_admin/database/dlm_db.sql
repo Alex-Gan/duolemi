@@ -7,8 +7,8 @@ CREATE TABLE `dlm_franchise_course` (
   `banner` json DEFAULT NULL COMMENT 'banner图，存json格式',
   `details` text COMMENT '详情介绍',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
-  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='加盟课表';
 
@@ -26,8 +26,8 @@ CREATE TABLE `dlm_experience_course` (
   `experience_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '体验价',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '上下架 1:上架 2:下架',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
-  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='体验课程表';
 
@@ -40,8 +40,8 @@ CREATE TABLE `dlm_member` (
   `nickname` varchar(50) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '会员昵称',
   `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '会员头像',
   `mobile` varchar(20) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '手机号',
-  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
-  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='会员表';
 
@@ -57,7 +57,7 @@ CREATE TABLE `dlm_promoter` (
   `no_settled_commission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '待结算佣金',
   `commission_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金余额',
   `total_withdraw` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计提现',
-  `created_at` datetime NULL DEFAULT '' COMMENT '加入时间',
+  `created_at` datetime DEFAULT NULL COMMENT '加入时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='推广员表';
 
@@ -73,8 +73,8 @@ CREATE TABLE `dlm_purchase_history` (
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '名称',
   `mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '体验课状态 1:已购买 2:已面试 3:正在体验 4:体验完成',
-  `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
-  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`),
   KEY `idx_name` (`name`),
   KEY `idx_mobile` (`mobile`)
@@ -183,7 +183,7 @@ CREATE TABLE `dlm_article` (
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
   `content` text COMMENT '详情介绍',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-   `created_at` datetime NULL DEFAULT '' COMMENT '创建时间',
-  `updated_at` datetime NULL DEFAULT '' COMMENT '更改时间',
+   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='文章表';
