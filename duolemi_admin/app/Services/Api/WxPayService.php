@@ -25,7 +25,7 @@ class WxPayService extends BaseService
             'mch_id'           => config('wx.mch_id'),
             'nonce_str'        => self::getNonceStr(),
             'body'             => '购买体验课',
-            'attach'           => $attach,
+            //'attach'           => $attach,
             'out_trade_no'     => self::getOutTradeNo(),
             'total_fee'        => $total_fee,
             'spbill_create_ip' => $_SERVER['REMOTE_ADDR'],
