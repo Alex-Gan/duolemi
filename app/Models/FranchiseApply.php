@@ -13,4 +13,6 @@ class FranchiseApply extends Model
     protected $table = 'franchise_apply';
 
     protected $guarded = ['id'];
+
+    public $timestamps = false;
 }
