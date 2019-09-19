@@ -27,6 +27,7 @@ Route::group(['namespace' => 'Api'], function() {
     //首页页面对应的数据
     Route::post('index', 'IndexController@getIndexData'); //首页页面对应的数据
     Route::post('leagueDetail', 'IndexController@leagueDetail'); //加盟课程详情
+    Route::post('freeCourseDetail', 'IndexController@freeCourseDetail'); //体验课详情
 
     //个人信息相关的路由
     Route::post('login', 'PersonalDataController@getPersonalOpenIdByCode'); //微信code换取身份openid

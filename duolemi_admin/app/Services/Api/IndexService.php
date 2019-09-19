@@ -134,4 +134,27 @@ class IndexService extends BaseService
 
         return $this->formatResponse(0, 'ok', $franchise_course);
     }
+
+    /**
+     * 体验课详情
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function freeCourseDetail($data)
+    {
+        $id = !empty($data['id']) ? intval($data['id']) : '';
+
+        if ($id == '') {
+            return $this->formatResponse(404, '验课id为空');
+        }
+
+        /*体验课信息*/
+        $experience_course = ExperienceCourse::select(['id', 'name as title', 'experience_price as freePrice', 'original_price as price', 'experience_price as totalCount'])
+            ->where('id', $id)
+            ->where('is_delete', 0)
+            ->first();
+
+        return $this->formatResponse(0, 'ok', $experience_course);
+    }
 }
