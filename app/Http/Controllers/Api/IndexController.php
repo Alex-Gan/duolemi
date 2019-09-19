@@ -32,9 +32,23 @@ class IndexController
 
     /**
      * 加盟课程详情
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function leagueDetail(Request $request)
     {
         return $this->service->leagueDetail($request->input());
+    }
+
+    /**
+     * 体验课详情
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function freeCourseDetail(Request $request)
+    {
+        return $this->service->freeCourseDetail($request->input());
     }
 }
