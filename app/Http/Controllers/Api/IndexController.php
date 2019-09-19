@@ -29,4 +29,12 @@ class IndexController
     {
         return $this->service->getIndexData();
     }
+
+    /**
+     * 加盟课程详情
+     */
+    public function leagueDetail(Request $request)
+    {
+        return $this->service->leagueDetail($request->input());
+    }
 }

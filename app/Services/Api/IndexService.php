@@ -92,4 +92,46 @@ class IndexService extends BaseService
 
         return $experience_course;
     }
+
+    /**
+     * 加盟课详情
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function leagueDetail($data)
+    {
+        $id = !empty($data['id']) ? intval($data['id']) : '';
+
+        if ($id == '') {
+            return $this->formatResponse(404, '加盟课id为空');
+        }
+
+        /*加盟课信息*/
+        $franchise_course = FranchiseCourse::select(['id', 'title', 'subtitle as subTitle', 'banner', 'details as content'])
+            ->where('id', $id)
+            ->where('is_delete', 0)
+            ->first();
+
+        if (empty($franchise_course)) {
+            return $this->formatResponse(404, '加盟课信息不存在');
+        }
+
+        /*banner图格式转化*/
+        $banner_arr = json_decode($franchise_course->banner, true);
+        $banner_arr_new = [];
+        foreach ($banner_arr as $banner) {
+            $banner_arr_new[] = $banner['img'];
+        }
+        $franchise_course->banner = $banner_arr_new;
+
+        /*将详情简介内容格式化*/
+        $franchise_course->content = htmlspecialchars_decode($franchise_course->content);
+
+        /*客服电话*/
+        $contact = NavigationSettings::where('id', 4)->value('type_relation');
+        $franchise_course->contact = !empty($contact) ? $contact : '40012345678';
+
+        return $this->formatResponse(0, 'ok', $franchise_course);
+    }
 }
