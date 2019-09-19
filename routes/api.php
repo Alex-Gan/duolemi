@@ -30,6 +30,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('leagueApply', 'LeagueController@leagueApply'); //申请加盟
     Route::post('freeCourseDetail', 'FreeCourseController@freeCourseDetail'); //体验课详情
     Route::post('freeCoursePay', 'FreeCourseController@freeCoursePay'); //支付体验课
+    Route::post('notify_url', 'FreeCourseController@notifyUrl'); //支付结果通知
 
 
     //个人信息相关的路由

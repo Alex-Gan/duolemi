@@ -41,4 +41,14 @@ class FreeCourseController
     {
         return $this->service->freeCoursePay($request->input());
     }
+
+    /**
+     * 支付回调通知
+     */
+    public function notifyUrl()
+    {
+        return $this->service->notifyUrl();
+    }
+
+
 }
