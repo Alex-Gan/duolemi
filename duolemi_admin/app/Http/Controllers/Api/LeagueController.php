@@ -41,4 +41,15 @@ class LeagueController
     {
         return $this->service->leagueApply($request->input());
     }
+
+    /**
+     * 我的加盟详情
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myLeagueDetail(Request $request)
+    {
+        return $this->service->myLeagueDetail($request->input());
+    }
 }

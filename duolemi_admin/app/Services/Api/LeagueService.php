@@ -5,6 +5,7 @@ use App\Models\Banner;
 use App\Models\ExperienceCourse;
 use App\Models\FranchiseApply;
 use App\Models\FranchiseCourse;
+use App\Models\FranchiseCourseProgress;
 use App\Models\Member;
 use App\Models\NavigationSettings;
 
@@ -97,9 +98,7 @@ class LeagueService extends BaseService
         }
 
         /*效验是否申请过*/
-        $franchise_apply_has = FranchiseApply::where('member_id', $member->id)
-            ->where('franchise_course_id', $id)
-            ->exists();
+        $franchise_apply_has = FranchiseApply::where('member_id', $member->id)->exists();
 
         if ($franchise_apply_has) {
             return $this->formatResponse(404, '已申请提交过，无需重复申请');
@@ -128,9 +127,55 @@ class LeagueService extends BaseService
         $res = FranchiseApply::create($save_data);
 
         if ($res) {
+            /*加盟进度*/
+            FranchiseCourseProgress::create([
+                'member_id' => $member->id,
+                'franchise_course_id' => $id,
+                'franchise_apply_id' => $res->id,
+                'remark' => !empty($data['remark']) ? $data['remark'] : '',
+                'processing_at' => date("Y-m-d H:i:s", time()),
+                'created_at' => date("Y-m-d H:i:s", time())
+            ]);
+
             return $this->formatResponse(0, '申请加盟成功');
         } else {
             return $this->formatResponse(500, '申请加盟失败');
         }
+    }
+
+    /**
+     * 我的加盟详情
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myLeagueDetail($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        /*效验身份是否存在*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(404, '会员信息不存在');
+        }
+
+        /*我的加盟信息*/
+        $franchise_apply = FranchiseApply::select(['id', 'name', 'mobile'])
+            ->where('member_id', $member->id)
+            ->first();
+
+        if (empty($franchise_apply)) {
+            return $this->formatResponse(404, '暂无加盟信息');
+        }
+
+        /*加盟进度*/
+        $franchise_course_progress = FranchiseCourseProgress::where('member_id', $member->id)
+            ->where('franchise_apply_id', $franchise_apply->id)
+            ->orderBy('processing_at', 'desc')
+            ->get();
+
+        $franchise_apply->join_progress = $franchise_course_progress;
+
+        return $this->formatResponse(0, 'ok', $franchise_apply);
     }
 }

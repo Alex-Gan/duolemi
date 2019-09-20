@@ -218,3 +218,18 @@ CREATE TABLE `dlm_experience_progress` (
     `created_at` datetime DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='体验课进度明细';
+
+
+-- 加盟课进度明细
+DROP TABLE IF EXISTS `dlm_franchise_course_progress`;
+CREATE TABLE `dlm_franchise_course_progress` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '购买人id',
+  `franchise_course_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '体验课ID',
+  `franchise_apply_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '申请加盟ID',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '加盟进度状态 1:信息已提交 2:资质已审核 3:教师培训 4:已开课 5:加盟完成 6:已结算返佣',
+  `remark` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '备注',
+  `processing_at` datetime DEFAULT NULL COMMENT '处理时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='加盟课进度明细';
