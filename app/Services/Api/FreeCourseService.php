@@ -305,7 +305,7 @@ class FreeCourseService extends BaseService
         if (empty($purchase_history)) {
             return $this->formatResponse(404, '体验课详情信息不存在');
         }
-        
+
         $purchase_history->course_name = ExperienceCourse::where('id', $purchase_history->experience_course_id)->value('name');
 
         /*检验当前体验课是否为自己的*/

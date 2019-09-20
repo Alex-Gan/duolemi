@@ -33,6 +33,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('notify_url', 'FreeCourseController@notifyUrl'); //支付结果通知
     Route::post('myFreeCourse', 'FreeCourseController@myFreeCourse'); //我的体验课列表
     Route::post('myFreeCourseDetail', 'FreeCourseController@myFreeCourseDetail'); //我的体验课详情
+    Route::post('myLeagueDetail', 'LeagueController@myLeagueDetail'); //我的加盟详情
 
 
     Route::post('myCommission', 'CommissionController@myCommission'); //我的佣金
