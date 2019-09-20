@@ -7,6 +7,7 @@
  */
 namespace App\Services;
 
+use App\Models\ExperienceProgress;
 use App\Models\PurchaseHistory;
 
 class PurchaseHistoryService extends BaseService
@@ -98,160 +99,74 @@ class PurchaseHistoryService extends BaseService
     }
 
     /**
-     * 添加体验课程
-     *
-     * @param $params
-     * @return array
-     */
-    public function add($params)
-    {
-        $data = [
-            'name'             => $params['name'],
-            'introduction'     => $params['introduction'],
-            'banner'           => json_encode($params['banner']),
-            'details'          => htmlspecialchars($params['details']),
-            'sort'             => intval($params['sort']),
-            'original_price'   => $params['original_price'],
-            'experience_price' => $params['sort'],
-            'status'           => intval($params['status']),
-            'created_at'       => date("Y-m-d H:i:s", time())
-        ];
-
-        $res = ExperienceCourse::create($data);
-        if ($res) {
-            return [
-                'code' => 0,
-                'msg'  => '添加成功'
-            ];
-        } else {
-            return [
-                'code' => 1,
-                'msg'  => '添加失败'
-            ];
-        }
-    }
-
-    /**
-     * 删除
-     *
-     * @param $id
-     * @return array
-     */
-    public function delete($id)
-    {
-        $res = ExperienceCourse::where('id', $id)->update(['is_delete' => 1]);
-
-        if ($res) {
-            return [
-                'code' => 0,
-                'msg'  => '删除成功'
-            ];
-        } else {
-            return [
-                'code' => 1,
-                'msg'  => '删除失败'
-            ];
-        }
-    }
-
-    /**
-     * 查询编辑页面内容
+     * 购买记录
      *
      * @param $id
      * @return mixed
      */
-    public function editView($id)
+    public function getPurchaseHistory($id)
     {
-        $franchise_course_data = ExperienceCourse::where('id', $id)->first();
+        $purchase_history = PurchaseHistory::find($id);
 
-        //将banner转化格式
-        $franchise_course_data['banner'] = json_decode($franchise_course_data['banner'], true);
+        if (!empty($purchase_history)) {
+            $purchase_history_progress = ExperienceProgress::where('purchase_history_id', $purchase_history->id)->orderBy('processing_at', 'desc')->get();
 
-        $franchise_course_data['banner_json'] = json_encode($franchise_course_data['banner']);
+            foreach ($purchase_history_progress as &$progress) {
+                switch ($progress['status']) {
+                    case 1:
+                        $progress['status_text'] = '已购买';
+                        break;
+                    case 2:
+                        $progress['status_text'] = '已面试';
+                        break;
+                    case 3:
+                        $progress['status_text'] = '正在体验';
+                        break;
+                    case 4:
+                        $progress['status_text'] = '体验完成';
+                        break;
+                }
+            }
 
-        //将详情介绍转html格式
-        $franchise_course_data['details'] = stripslashes($franchise_course_data['details']);
-        return $franchise_course_data;
+            $purchase_history->progress = $purchase_history_progress;
+        }
+
+        return $purchase_history;
     }
 
     /**
-     * 修改
+     * 处理加盟申请
      *
      * @param $id
-     * @param $params
+     * @param $data
      * @return array
      */
-    public function editPut($id, $params)
+    public function handle($id, $data)
     {
-        $experience_course_data = ExperienceCourse::find($id);
-
-        $experience_course_data->name = $params['name'];
-        $experience_course_data->introduction = $params['introduction'];
-        $experience_course_data->banner = json_encode($params['banner']);
-        $experience_course_data->details = htmlspecialchars($params['details']);
-        $experience_course_data->sort = $params['sort'];
-        $experience_course_data->original_price = $params['original_price'];
-        $experience_course_data->experience_price = $params['experience_price'];
-        $experience_course_data->status = $params['status'];
-        $res = $experience_course_data->save();
+        $purchase_history = PurchaseHistory::find($id);
+        $purchase_history->status = intval($data['status']);
+        $res = $purchase_history->save();
 
         if ($res) {
+            ExperienceProgress::create([
+                'member_id' => $purchase_history->member_id,
+                'experience_course_id' => $purchase_history->experience_course_id,
+                'purchase_history_id' => $purchase_history->id,
+                'status' => $data['status'],
+                'remark' => trim($data['remark']),
+                'processing_at' => date("Y-m-d H:i:s", time()),
+                'created_at' => date("Y-m-d H:i:s", time())
+            ]);
+
             return [
                 'code' => 0,
-                'msg'  => '修改成功'
+                'msg'  => '保存成功'
             ];
         } else {
             return [
                 'code' => 1,
-                'msg'  => '修改失败'
+                'msg'  => '保存失败'
             ];
-        }
-    }
-
-    /**
-     * 更改体验课程上下架状态
-     *
-     * @param $id
-     * @return array
-     */
-    public function changeStatus($id)
-    {
-        $experience_course_data = $this->model::find(intval($id));
-
-        if ($experience_course_data->status == 1) {
-            $experience_course_data->status = 2;
-        } else {
-            $experience_course_data->status = 1;
-        }
-        $res = $experience_course_data->save();
-
-        if ($res) {
-            return [
-                'code' => 0,
-                'msg'  => '更改状态成功'
-            ];
-        } else {
-            return [
-                'code' => 1,
-                'msg'  => '更改状态失败'
-            ];
-        }
-    }
-
-    /**
-     * 字符串截取
-     *
-     * @param $str
-     * @param $length
-     * @return string
-     */
-    private function substrEllipsis($str, $length)
-    {
-        $str_len = mb_strlen($str, 'utf8');
-        if ($str_len > $length) {
-            return mb_substr($str, 0, $length, 'utf-8').'...';
-        } else {
-            return $str;
         }
     }
 }

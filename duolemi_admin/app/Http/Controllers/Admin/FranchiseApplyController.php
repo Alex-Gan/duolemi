@@ -34,5 +34,28 @@ class FranchiseApplyController extends BaseController
         return view('admin/franchise_apply_list', ['data' => $data]);
     }
 
+    /**
+     * 处理加盟申请页面
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function handleView($id)
+    {
+        $data = $this->service->getFranchiseApply($id);
 
+        return view('admin/franchise_apply_edit', ['data' => $data]);
+    }
+
+    /**
+     * 处理加盟申请
+     *
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
+    public function handle($id, Request $request)
+    {
+        return $this->service->handle($id, $request->input());
+    }
 }

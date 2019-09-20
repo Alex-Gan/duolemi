@@ -52,6 +52,8 @@ Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
 
     //购买记录相关的路由
     Route::get('purchase_history/list','Admin\PurchaseHistoryController@list'); //购买记录列表
+    Route::get('purchase_history/handle/{id}','Admin\PurchaseHistoryController@handleView'); //处理购买记录页面
+    Route::put('purchase_history/handle/{id}','Admin\PurchaseHistoryController@handle'); //处理购买记录
 
     //推广员相关的路由
     Route::get('promoter/list','Admin\PromoterController@list'); //推广员列表
@@ -61,6 +63,8 @@ Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
 
     //加盟申请记录的路由
     Route::get('franchise_apply/list','Admin\FranchiseApplyController@list'); //加盟申请记录列表
+    Route::get('franchise_apply/handle/{id}','Admin\FranchiseApplyController@handleView'); //处理加盟申请页面
+    Route::put('franchise_apply/handle/{id}','Admin\FranchiseApplyController@handle'); //处理加盟申请
 
     //提现相关的路由
     Route::get('withdraw/list','Admin\WithdrawController@list'); //提现列表

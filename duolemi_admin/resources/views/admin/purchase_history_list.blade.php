@@ -75,7 +75,7 @@
                     <td>{{$item->status_text}}</td>
                     <td>{{$item->created_at}}</td>
                     <td class="td-manage">
-                        <a title="处理" onclick="edit_franchise_course({{$item->id}})" href="javascript:;">
+                        <a title="处理" onclick="handle_purchase_history({{$item->id}})" href="javascript:;">
                             <i class="layui-icon">&#xe642;</i>处理
                         </a>
                     </td>
@@ -122,10 +122,8 @@
     });
 
     /*处理*/
-    function edit_franchise_course(id) {
-        layer.msg('该功能正在完善中，请耐心等待...');
-        return false;
-        location.href = "/admin/experience_course/edit/"+id;
+    function handle_purchase_history(id) {
+        location.href = "/admin/purchase_history/handle/"+id;
     }
 </script>
 </body>
