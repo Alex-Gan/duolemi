@@ -5,6 +5,7 @@ use App\Models\ExperienceCourse;
 use App\Models\Member;
 use App\Models\NavigationSettings;
 use App\Models\PurchaseHistory;
+use App\Models\WxPayLog;
 
 class FreeCourseService extends BaseService
 {
@@ -111,10 +112,16 @@ class FreeCourseService extends BaseService
             'mobile' => $data['mobile']
         ];
 
+        /*支付金额*/
+        $total_fee = $experience_course_data['experience_price'];
+
+        /*微信支付记录日志*/
+        $wx_pay_log = WxPayLog::create(['attach' => json_encode($attach)]);
+
         $wx_pay_sign_data = [
             'openid' => $openid,
-            'total_fee' => $experience_course_data['experience_price'],
-            'attach' => serialize($attach),
+            'total_fee' => $total_fee,
+            'attach' => $wx_pay_log->id,
         ];
 
         /*进行支付*/
@@ -139,23 +146,14 @@ class FreeCourseService extends BaseService
             $pay_sign = $response_arr['sign']; //支付结果返回的sign
             unset($response_arr['sign']);
 
-            $response_sign_arr = [
-                'appid' => $response_arr['appid'],
-                'attach' => $response_arr['attach'],
-                'mch_id' => $response_arr['mch_id'],
-                'nonce_str' => $response_arr['nonce_str'],
-                'openid' => $response_arr['openid'],
-                'out_trade_no' => $response_arr['out_trade_no'],
-                'total_fee' => $response_arr['total_fee'],
-                'trade_type' => $response_arr['trade_type']
-            ];
-
             //生成sign
-            $sign = (new WxPayService())->MakeSign($response_sign_arr);
+            $sign = (new WxPayService())->MakeSign($response_arr);
             if ($pay_sign == $sign) {
 
                 /*附件中的订单信息*/
-                $attach_arr = json_decode($response_arr['attach'], true);
+                $wx_pay_log_id = $response_arr['attach'];
+                $attach = WxPayLog::where('id', $wx_pay_log_id)->value('attach');
+                $attach_arr = json_decode($attach, true);
 
                 /*用户信息*/
                 $member = Member::where('openid', $attach_arr['openid'])->first();
@@ -220,6 +218,11 @@ class FreeCourseService extends BaseService
 
     public function test()
     {
+        $attach = 3;
+        /*微信支付记录日志*/
+        $wx_pay_log = WxPayLog::create(['attach' => json_encode($attach)]);
+        dd($wx_pay_log->id);
+
         $aa = serialize(['name'=>'甘超胜', 'mobile' => '15000319670']);
         dd(unserialize($aa));
 

@@ -187,3 +187,19 @@ CREATE TABLE `dlm_article` (
   `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='文章表';
+
+
+-- 微信支付记录
+DROP TABLE IF EXISTS `dlm_wx_pay_log`;
+CREATE TABLE `dlm_wx_pay_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `out_trade_no` varchar(32) NOT NULL DEFAULT '' COMMENT '商户订单号',
+  `total_fee` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单总金额，单位为分',
+  `attach` varchar(255) NOT NULL DEFAULT '' COMMENT '附加数据',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '支付状态 1:待支付 2:已支付',
+  `request_params` text COMMENT 'json_encode 请求信息',
+  `response_params` text COMMENT 'json_encode 返回信息',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='微信支付记录';

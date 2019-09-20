@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\WxPayLog;
+
 class WxPayService extends BaseService
 {
 
@@ -48,7 +50,14 @@ class WxPayService extends BaseService
 
         /*参数值转array*/
         $response_arr = $this->xmlToArray($response);
-        //dd($response_arr);
+
+        /*数据存入log日志中*/
+        $wx_pay_log = WxPayLog::find($attach);
+        $wx_pay_log->out_trade_no = $pay_sign_params['out_trade_no'];
+        $wx_pay_log->total_fee = $pay_sign_params['total_fee'];
+        $wx_pay_log->request_params = json_encode($response_arr);
+        $wx_pay_log->created_at = date("Y-m-d H:i:s", time());
+        $wx_pay_log->save();
 
         /*统一下单成功，继续进行签名*/
         if ($response_arr['return_code'] === 'SUCCESS' && $response_arr['result_code'] === 'SUCCESS') {
