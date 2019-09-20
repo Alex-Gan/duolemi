@@ -6,6 +6,7 @@ use App\Models\Member;
 use App\Models\NavigationSettings;
 use App\Models\PurchaseHistory;
 use App\Models\WxPayLog;
+use Illuminate\Support\Facades\DB;
 
 class FreeCourseService extends BaseService
 {
@@ -99,11 +100,9 @@ class FreeCourseService extends BaseService
             return $this->formatResponse(404, '该体验课不存在或已下架');
         }
 
-
         //测试数据
         $openid = 'oeGsr5JJzSBAmtIZZMUvI9US095E';
-
-
+        
         /*附加信息*/
         $attach = [
             'openid' => $openid,
@@ -143,56 +142,64 @@ class FreeCourseService extends BaseService
 
         if ($response_arr['return_code'] === 'SUCCESS' && $response_arr['result_code'] === 'SUCCESS') {
 
-            $pay_sign = $response_arr['sign']; //支付结果返回的sign
+            /*支付结果返回的sign*/
+            $pay_sign = $response_arr['sign'];
             unset($response_arr['sign']);
 
-            //生成sign
+            /*生成sign*/
             $sign = (new WxPayService())->MakeSign($response_arr);
             if ($pay_sign == $sign) {
 
-                /*附件中的订单信息*/
-                $wx_pay_log_id = $response_arr['attach'];
-                $attach = WxPayLog::where('id', $wx_pay_log_id)->value('attach');
-                $attach_arr = json_decode($attach, true);
+                try {
+                    /*开启事物*/
+                    DB::beginTransaction();
 
-                /*用户信息*/
-                $member = Member::where('openid', $attach_arr['openid'])->first();
+                    /*附件中的订单信息*/
+                    $wx_pay_log_id = $response_arr['attach'];
+                    $wx_pay_res = WxPayLog::where('id', $wx_pay_log_id)->update(['status' => 2, 'response_params' => json_encode($response_arr)]);
+                    $attach = WxPayLog::where('id', $wx_pay_log_id)->value('attach');
+                    $attach_arr = json_decode($attach, true);
 
-                /*订单信息*/
-                $create_data = [
-                    'member_id' => $member->id,
-                    'experience_course_id' => $attach_arr['experience_course_id'],
-                    'avatar' => $member->avatar,
-                    'nickname' => $member->nickname,
-                    'name' => $attach_arr['name'],
-                    'mobile' => $attach_arr['mobile'],
-                    'created_at' => date("Y-m-d H:i:s", time())
-                ];
+                    /*用户信息*/
+                    $member = Member::where('openid', $attach_arr['openid'])->first();
 
-                /*创建购买体验课记录*/
-                $res = PurchaseHistory::create($create_data);
+                    /*订单信息*/
+                    $create_data = [
+                        'member_id' => $member->id,
+                        'experience_course_id' => $attach_arr['experience_course_id'],
+                        'avatar' => $member->avatar,
+                        'nickname' => $member->nickname,
+                        'name' => $attach_arr['name'],
+                        'mobile' => $attach_arr['mobile'],
+                        'created_at' => date("Y-m-d H:i:s", time())
+                    ];
 
-                if ($res) {
-                    /*通知微信支付成功*/
-                    $response_data = array(
-                        'return_code' => 'SUCCESS',
-                        'return_msg'  => 'OK'
-                    );
+                    /*创建购买体验课记录*/
+                    $res = PurchaseHistory::create($create_data);
 
-                    $response_xml_data = $this->ToXml($response_data);
-                    echo $response_xml_data;exit;
+                    if ($wx_pay_res && $res) {
+                        /*提交事务*/
+                        DB::commit();
+
+                        /*通知微信支付成功*/
+                        $response_data = array(
+                            'return_code' => 'SUCCESS',
+                            'return_msg'  => 'OK'
+                        );
+
+                        $response_xml_data = $this->ToXml($response_data);
+                        echo $response_xml_data;exit;
+                    }
+
+                } catch (\Exception $e) {
+                    /*回滚事务*/
+                    DB::rollBack();
+
+                    /*记录错误日志*/
+                    \Log::info("微信支付逻辑处理错误:".$e->getMessage());
                 }
             }
         }
-
-        /*通知微信支付成功*/
-        $response_data = array(
-            'return_code' => 'SUCCESS',
-            'return_msg'  => 'OK'
-        );
-
-        $response_xml_data = $this->ToXml($response_data);
-        echo $response_xml_data;exit;
     }
 
     /**
@@ -214,87 +221,5 @@ class FreeCourseService extends BaseService
         }
         $xml.="</xml>";
         return $xml;
-    }
-
-    public function test()
-    {
-        $attach = 3;
-        /*微信支付记录日志*/
-        $wx_pay_log = WxPayLog::create(['attach' => json_encode($attach)]);
-        dd($wx_pay_log->id);
-
-        $aa = serialize(['name'=>'甘超胜', 'mobile' => '15000319670']);
-        dd(unserialize($aa));
-
-        $response_json  = '{"appid":"wxc56da5478d843331","bank_type":"CFT","cash_fee":"1","fee_type":"CNY","is_subscribe":"N","mch_id":"1378450802","nonce_str":"dtrtwybnehgjphl7pdbrrkyztc2ysg9c","openid":"oeGsr5JJzSBAmtIZZMUvI9US095E","out_trade_no":"D201909192007513855","result_code":"SUCCESS","return_code":"SUCCESS","sign":"D4CEA4FE400118F55E4D35738C3726E2","time_end":"20190919200802","total_fee":"1","trade_type":"JSAPI","transaction_id":"4200000385201909191496263592"}';
-
-        $response_arr = json_decode($response_json, true);
-
-        if ($response_arr['return_code'] === 'SUCCESS' && $response_arr['result_code'] === 'SUCCESS') {
-
-            //unset($response_arr['sign']);
-            $response_sign_arr = [
-                'appid' => $response_arr['appid'],
-                //'attach' => $response_arr['attach'],
-                'bank_type' => $response_arr['bank_type'],
-                'cash_fee' => $response_arr['cash_fee'],
-                'fee_type' => $response_arr['fee_type'],
-                'is_subscribe' => $response_arr['is_subscribe'],
-                'mch_id' => $response_arr['mch_id'],
-                'nonce_str' => $response_arr['nonce_str'],
-                'openid' => $response_arr['openid'],
-                'out_trade_no' => $response_arr['out_trade_no'],
-                'result_code' => $response_arr['result_code'],
-                'return_code' => $response_arr['return_code'],
-                //'sign' => $response_arr['sign'],
-                'time_end' => $response_arr['time_end'],
-                'trade_type' => $response_arr['trade_type'],
-                'total_fee' => $response_arr['total_fee'],
-                'transaction_id' => $response_arr['transaction_id'],
-            ];
-
-            //生成sign
-            $sign = (new WxPayService())->MakeSign($response_sign_arr); //D4CEA4FE400118F55E4D35738C3726E2 D4CEA4FE400118F55E4D35738C3726E2
-            dd($sign);
-            echo $sign;
-            echo "<hr/>";
-            echo $response_arr['sign'];
-            die;
-            if ($response_arr['sign'] == $sign) {
-
-                /*附件中的订单信息*/
-                $attach_arr = json_decode($response_arr['attach'], true);
-
-                dd($attach_arr);
-
-                /*用户信息*/
-                $member = Member::where('openid', $attach_arr['openid'])->first();
-
-                /*订单信息*/
-                $create_data = [
-                    'member_id' => $member->id,
-                    'experience_course_id' => $attach_arr['experience_course_id'],
-                    'avatar' => $member->avatar,
-                    'nickname' => $member->nickname,
-                    'name' => $attach_arr['name'],
-                    'mobile' => $attach_arr['mobile'],
-                    'created_at' => date("Y-m-d H:i:s", time())
-                ];
-
-                /*创建购买体验课记录*/
-                $res = PurchaseHistory::create($create_data);
-
-                if ($res) {
-                    /*通知微信支付成功*/
-                    $response_data = array(
-                        'return_code' => 'SUCCESS',
-                        'return_msg'  => 'OK'
-                    );
-
-                    $response_xml_data = $this->ToXml($response_data);
-                    echo $response_xml_data;exit;
-                }
-            }
-        }
     }
 }
