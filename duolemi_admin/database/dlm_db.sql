@@ -183,7 +183,7 @@ CREATE TABLE `dlm_article` (
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
   `content` text COMMENT '详情介绍',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0:否 1:是',
-   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='文章表';
@@ -203,3 +203,18 @@ CREATE TABLE `dlm_wx_pay_log` (
   `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='微信支付记录';
+
+
+-- 体验课进度明细
+DROP TABLE IF EXISTS `dlm_experience_progress`;
+CREATE TABLE `dlm_experience_progress` (
+    `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '购买人id',
+    `experience_course_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '体验课ID',
+    `purchase_history_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '购买记录ID',
+    `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '体验课状态 1:已购买 2:已面试 3:正在体验 4:体验完成',
+    `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+    `processing_at` datetime DEFAULT NULL COMMENT '处理时间',
+    `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='体验课进度明细';

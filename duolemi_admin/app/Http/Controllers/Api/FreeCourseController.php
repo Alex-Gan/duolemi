@@ -50,10 +50,25 @@ class FreeCourseController
         return $this->service->notifyUrl();
     }
 
-    public function test()
+    /**
+     * 我的体验课列表
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myFreeCourse(Request $request)
     {
-        return $this->service->test();
+        return $this->service->myFreeCourse($request->input());
     }
 
-
+    /**
+     * 我的体验课详情
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myFreeCourseDetail(Request $request)
+    {
+        return $this->service->myFreeCourseDetail($request->input());
+    }
 }
