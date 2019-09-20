@@ -13,4 +13,10 @@ class PurchaseHistory extends Model
     protected $table = 'purchase_history';
 
     protected $guarded = ['id'];
+
+    public function getExperienceCourse()
+    {
+        return $this->hasOne(ExperienceCourse::class, 'id', 'experience_course_id')
+                    ->select(['id', 'name', 'banner']);
+    }
 }

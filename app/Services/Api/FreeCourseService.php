@@ -2,6 +2,7 @@
 namespace App\Services\Api;
 
 use App\Models\ExperienceCourse;
+use App\Models\ExperienceProgress;
 use App\Models\Member;
 use App\Models\NavigationSettings;
 use App\Models\PurchaseHistory;
@@ -102,7 +103,7 @@ class FreeCourseService extends BaseService
 
         //测试数据
         $openid = 'oeGsr5JJzSBAmtIZZMUvI9US095E';
-        
+
         /*附加信息*/
         $attach = [
             'openid' => $openid,
@@ -177,7 +178,18 @@ class FreeCourseService extends BaseService
                     /*创建购买体验课记录*/
                     $res = PurchaseHistory::create($create_data);
 
-                    if ($wx_pay_res && $res) {
+                    /*体验课进度明细*/
+                    $res1 = ExperienceProgress::create([
+                        'member_id' => $member->id,
+                        'experience_course_id' => $attach_arr['experience_course_id'],
+                        'purchase_history_id' => $res->id,
+                        'status' => 1,
+                        'remark' => '已购买',
+                        'processing_at' => date("Y-m-d H:i:s", time()),
+                        'created_at' => date("Y-m-d H:i:s", time())
+                    ]);
+
+                    if ($wx_pay_res && $res && $res1) {
                         /*提交事务*/
                         DB::commit();
 
@@ -221,5 +233,95 @@ class FreeCourseService extends BaseService
         }
         $xml.="</xml>";
         return $xml;
+    }
+
+    /**
+     * 我的体验课列表
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myFreeCourse($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        /*效验身份是否存在*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(404, '会员信息不存在');
+        }
+
+        $my_free_course = PurchaseHistory::select(['id', 'experience_course_id' ,'status', 'created_at'])
+            ->where('member_id', $member->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        foreach ($my_free_course as &$free_course) {
+            $experience_course = $free_course->getExperienceCourse;
+            $free_course->experience_course_name = $experience_course->name;
+            /*banner图格式转化*/
+            $banner_arr = json_decode($experience_course->banner, true);
+            $free_course->img = $banner_arr[0]['img'];
+
+            if ($free_course->status == 1) {
+                $free_course->status = '已付款';
+            } else if ($free_course->status == 2) {
+                $free_course->status = '已面试';
+            } else if ($free_course->status == 3) {
+                $free_course->status = '正在体验';
+            } else if ($free_course->status == 4) {
+                $free_course->status = '体验完成';
+            }
+
+            unset($free_course['experience_course_id']);
+            unset($free_course['getExperienceCourse']);
+        }
+
+        return $this->formatResponse(0, 'ok', $my_free_course);
+    }
+
+    /**
+     * 我的体验课详情
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myFreeCourseDetail($data)
+    {
+        $id = !empty($data['id']) ? intval($data['id']) : '';
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        if ($id == '') {
+            return $this->formatResponse(404, '体验课id为空');
+        }
+
+        /*效验身份是否存在*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(404, '会员信息不存在');
+        }
+
+        $purchase_history = PurchaseHistory::select(['id', 'experience_course_id', 'member_id', 'name', 'mobile'])->find($id);
+        $purchase_history->course_name = ExperienceCourse::where('id', $purchase_history->experience_course_id)->value('name');
+
+        /*检验当前体验课是否为自己的*/
+        if ($purchase_history->member_id != $member->id) {
+            return $this->formatResponse(403, '体验课详情信息不存在');
+        }
+
+        /*获取体验进度信息*/
+        $experience_progress = ExperienceProgress::where('member_id', $purchase_history->member_id)
+            ->where('experience_course_id', $purchase_history->experience_course_id)
+            ->where('purchase_history_id', $purchase_history->id)
+            ->orderBy('processing_at', 'desc')
+            ->get();
+
+        $purchase_history->experience_progress = $experience_progress;
+
+        /*删除多余信息数据*/
+        unset($purchase_history['experience_course_id']);
+        unset($purchase_history['member_id']);
+
+        return $this->formatResponse(0, 'ok', $purchase_history);
     }
 }
