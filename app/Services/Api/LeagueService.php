@@ -127,7 +127,8 @@ class LeagueService extends BaseService
         $res = FranchiseApply::create($save_data);
 
         if ($res) {
-            /*加盟进度*/
+            /*加盟进度 to-do: 加盟进度*/
+            /*
             FranchiseCourseProgress::create([
                 'member_id' => $member->id,
                 'franchise_course_id' => $id,
@@ -136,6 +137,7 @@ class LeagueService extends BaseService
                 'processing_at' => date("Y-m-d H:i:s", time()),
                 'created_at' => date("Y-m-d H:i:s", time())
             ]);
+            */
 
             return $this->formatResponse(0, '申请加盟成功');
         } else {

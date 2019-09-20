@@ -18,7 +18,7 @@
       <span class="layui-breadcrumb">
         <a href="">加盟申请记录管理</a>
         <a>
-          <cite>加盟申请记录记录</cite>
+          <cite>加盟申请记录列表</cite>
         </a>
       </span>
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
@@ -71,7 +71,7 @@
                     <td>{{$item->lately_handle_at}}</td>
                     <td>{{$item->status_text}}</td>
                     <td class="td-manage">
-                        <a title="处理" onclick="handle_franchise_app({{$item->id}})" href="javascript:;">
+                        <a title="处理" onclick="handle_franchise_apply({{$item->id}})" href="javascript:;">
                             <i class="layui-icon">&#xe642;</i>处理
                         </a>
                     </td>
@@ -118,9 +118,7 @@
     });
 
     /*处理*/
-    function handle_franchise_app(id) {
-        layer.msg('该功能正在完善中，请耐心等待...');
-        return false;
+    function handle_franchise_apply(id) {
         location.href = "/admin/franchise_apply/handle/"+id;
     }
 </script>

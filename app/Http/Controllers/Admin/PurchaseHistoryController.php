@@ -34,5 +34,28 @@ class PurchaseHistoryController extends BaseController
         return view('admin/purchase_history_list', ['data' => $data]);
     }
 
+    /**
+     * 处理购买记录页面
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function handleView($id)
+    {
+        $data = $this->service->getPurchaseHistory($id);
 
+        return view('admin/purchase_history_edit', ['data' => $data]);
+    }
+
+    /**
+     * 处理购买记录
+     *
+     * @param $id
+     * @param Request $request
+     * @return array
+     */
+    public function handle($id, Request $request)
+    {
+        return $this->service->handle($id, $request->input());
+    }
 }

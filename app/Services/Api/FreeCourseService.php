@@ -179,6 +179,7 @@ class FreeCourseService extends BaseService
                     $res = PurchaseHistory::create($create_data);
 
                     /*体验课进度明细*/
+                    /*
                     $res1 = ExperienceProgress::create([
                         'member_id' => $member->id,
                         'experience_course_id' => $attach_arr['experience_course_id'],
@@ -188,8 +189,9 @@ class FreeCourseService extends BaseService
                         'processing_at' => date("Y-m-d H:i:s", time()),
                         'created_at' => date("Y-m-d H:i:s", time())
                     ]);
+                    */
 
-                    if ($wx_pay_res && $res && $res1) {
+                    if ($wx_pay_res && $res) {
                         /*提交事务*/
                         DB::commit();
 
