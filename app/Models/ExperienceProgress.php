@@ -13,4 +13,6 @@ class ExperienceProgress extends Model
     protected $table = 'experience_progress';
 
     protected $guarded = ['id'];
+
+    public $timestamps = false;
 }
