@@ -68,4 +68,47 @@ class CommissionService extends BaseService
             return $this->formatResponse(1, '提现申请失败');
         }
     }
+
+    /**
+     * 获取佣金提现列表
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function withdrawList($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+        $status = !empty($data['status']) ? intval($data['status']) : 0;
+
+        /*检查用户身份*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(1, '用户信息不存在');
+        }
+        if ($status > 0) {
+            $withdraw = Withdraw::select(['id', 'apply_money', 'withdraw_at', 'status'])
+                ->where('member_id', $member->id)
+                ->where('status', $status)
+                ->orderBy('withdraw_at', 'desc')
+                ->get();
+        } else {
+            $withdraw = Withdraw::select(['id', 'apply_money', 'withdraw_at', 'status'])
+                ->where('member_id', $member->id)
+                ->orderBy('withdraw_at', 'desc')
+                ->get();
+        }
+
+        /*状态转化*/
+        foreach ($withdraw as &$item) {
+            if ($item['status'] == 1) {
+                $item['status'] = '待发放';
+            } else if ($item['status'] == 2) {
+                $item['status'] = '已发放';
+            } else if ($item['status'] == 3) {
+                $item['status'] = '申请失败';
+            }
+        }
+
+        return $this->formatResponse(0, 'ok', $withdraw);
+    }
 }
