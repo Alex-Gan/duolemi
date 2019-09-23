@@ -8,6 +8,8 @@
 namespace App\Services;
 
 use App\Models\Banner;
+use App\Models\ExperienceCourse;
+use App\Models\FranchiseCourse;
 
 class BannerService extends BaseService
 {
@@ -67,8 +69,22 @@ class BannerService extends BaseService
      */
     public function create($params)
     {
+        $type = !empty($params['type']) ? intval($params['type']) : 0;
+
+        if ($type == 0) { //无
+            $type_relation_id = 0;
+        } else if ($type == 1) { //体验课程
+            $type_relation_id = intval($params['experience_course']);
+        } else if ($type == 2) { //加盟课程
+            $type_relation_id = intval($params['franchise_course']);
+        } else {
+            $type_relation_id = 0;
+        }
+
         $data = [
             'image'      => $params['image'],
+            'type'       => intval($params['type']),
+            'type_relation_id' => $type_relation_id,
             'sort'       => intval($params['sort']),
             'created_at' => date("Y-m-d H:i:s", time())
         ];
@@ -108,5 +124,23 @@ class BannerService extends BaseService
                 'msg'  => '删除失败'
             ];
         }
+    }
+
+    /**
+     * 加盟课、体验课导航
+     *
+     * @return array
+     */
+    public function getNavigationPage()
+    {
+        $experience_course = ExperienceCourse::select(['id', 'name'])->where('status', 1)->where('is_delete', 0)->get();
+        $franchise_course = FranchiseCourse::select(['id', 'title'])->where('is_delete', 0)->get();
+
+        $data = [
+            'experience_course' => $experience_course,
+            'franchise_course' => $franchise_course
+        ];
+
+        return $data;
     }
 }

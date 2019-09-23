@@ -41,7 +41,9 @@ class BannerController extends BaseController
      */
     public function addView()
     {
-        return view('admin/banner_add');
+        $data = $this->service->getNavigationPage();
+
+        return view('admin/banner_add', ['data' => $data]);
     }
 
     /**
