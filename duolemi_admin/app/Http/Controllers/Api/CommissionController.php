@@ -41,4 +41,15 @@ class CommissionController
     {
         return $this->service->withdrawList($request->input());
     }
+
+    /**
+     * 获取文章内容
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function getArticleDetails(Request $request)
+    {
+        return $this->service->getArticleDetails($request->input('id'));
+    }
 }
