@@ -68,6 +68,9 @@ Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
 
     //提现相关的路由
     Route::get('withdraw/list','Admin\WithdrawController@list'); //提现列表
+    Route::get('withdraw/detail/{id}','Admin\WithdrawController@detail'); //提现详情
+    Route::put('withdraw/audit_pass/{id}','Admin\WithdrawController@auditPass'); //提现审核通过
+    Route::put('withdraw/audit_reject/{id}','Admin\WithdrawController@auditReject'); //提现审核驳回
 
     //轮播图相关的路由
     Route::get('banner/list','Admin\BannerController@list'); //轮播图列表
