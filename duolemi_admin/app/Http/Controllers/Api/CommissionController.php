@@ -30,4 +30,15 @@ class CommissionController
     {
         return $this->service->CashWithdraw($request->input());
     }
+
+    /**
+     * 获取佣金提现列表
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function withdrawList(Request $request)
+    {
+        return $this->service->withdrawList($request->input());
+    }
 }
