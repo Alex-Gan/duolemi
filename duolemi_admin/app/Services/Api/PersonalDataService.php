@@ -79,7 +79,7 @@ class PersonalDataService extends BaseService
     }
 
     /**
-     * 同步微信用户信息到服务端
+     * 同步微信用户信息到服务端（保存用户头像昵称）
      *
      * @param $data
      * @return \Illuminate\Http\JsonResponse
@@ -88,12 +88,12 @@ class PersonalDataService extends BaseService
     {
         $validator = \Validator::make($data, [
             'openid' => 'required',
-            'nickname' => 'required',
-            'avatar'=> 'required',
+            'nickName' => 'required',
+            'faceImg'=> 'required',
         ],[
             'openid.required' => 'openid不能为空',
-            'nickname.required' => '手机验证码不能为空',
-            'avatar.required' => '手机验证码不能为空',
+            'nickName.required' => '昵称不能为空',
+            'faceImg.required' => '头像不能为空',
         ]);
         if ($validator->fails()) {
             return $this->formatResponse(400, $validator->messages()->first());
@@ -106,15 +106,15 @@ class PersonalDataService extends BaseService
 
         $res = $this->model::create([
             'openid' => $data['openid'],
-            'nickname' => $data['nickname'],
-            'avatar' => $data['avatar'],
+            'nickname' => $data['nickName'],
+            'avatar' => $data['faceImg'],
             'created_at' => date("Y-m-d H:i:s", time())
         ]);
 
         if ($res) {
             return $this->formatResponse(0, 'ok');
         } else {
-            return $this->formatResponse(1, '同步失败');
+            return $this->formatResponse(1, '保存失败');
         }
     }
 
