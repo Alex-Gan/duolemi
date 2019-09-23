@@ -39,6 +39,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('myCommission', 'CommissionController@myCommission'); //我的佣金
 
     //个人信息相关的路由
+    Route::post('checkLogin', 'PersonalDataController@checkLogin'); //检查用户是否登录过
     Route::post('login', 'PersonalDataController@getPersonalOpenIdByCode'); //微信code换取身份openid
     Route::post('sync', 'PersonalDataController@syncPersonalData'); //同步微信用户信息到服务端
 });

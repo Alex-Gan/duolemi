@@ -1,8 +1,23 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Member;
+
 class PersonalDataService extends BaseService
 {
+    protected $model;
+
+    /**
+     * 构造方法
+     *
+     * PersonalDataService constructor.
+     * @param Member $member
+     */
+    public function __construct(Member $member)
+    {
+        $this->model = $member;
+    }
+
     /**
      * 通过code微信换取身份openid
      *
@@ -55,7 +70,10 @@ class PersonalDataService extends BaseService
     }
 
     /**
+     * 同步微信用户信息到服务端
      *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
      */
     public function syncPersonalData($data)
     {
@@ -71,5 +89,46 @@ class PersonalDataService extends BaseService
         if ($validator->fails()) {
             return $this->formatResponse(400, $validator->messages()->first());
         }
+
+        $member_has = $this->model::where('openid', $data['openid'])->exists();
+        if ($member_has) {
+            return $this->formatResponse(0, 'ok');
+        }
+
+        $res = $this->model::create([
+            'openid' => $data['openid'],
+            'nickname' => $data['nickname'],
+            'avatar' => $data['avatar'],
+            'created_at' => date("Y-m-d H:i:s", time())
+        ]);
+
+        if ($res) {
+            return $this->formatResponse(0, 'ok');
+        } else {
+            return $this->formatResponse(1, '同步失败');
+        }
+    }
+
+    /**
+     * 检查用户是否登录过
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkLogin($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        if (empty($openid)) {
+            return $this->formatResponse(404, 'openid不能为空');
+        }
+
+        $member_data = $this->model::where('openid', $openid)->first();
+
+        if (!empty($member_data)) {
+            return $this->formatResponse(0, 'ok', $member_data);
+        }
+
+        return $this->formatResponse(1, '暂无数据');
     }
 }
