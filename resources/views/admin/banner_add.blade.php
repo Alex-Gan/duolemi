@@ -54,8 +54,12 @@
             <span class="x-red">*</span>体验课程
         </label>
         <div class="layui-input-inline">
-            <select name="content_val1" lay-verify="required" lay-search="" lay-filter="type1" style="height: 30px;">
-
+            <select name="experience_course" id="experience_course" lay-verify="required" lay-search="" lay-filter="type1" style="height: 30px;">
+                @if (!empty($data['experience_course']))
+                    @foreach ($data['experience_course'] as $experience_course)
+                        <option value="{{$experience_course->id}}">{{$experience_course->name}}</option>
+                    @endforeach
+                @endif
             </select>
         </div>
     </div>
@@ -64,8 +68,12 @@
             <span class="x-red">*</span>加盟课程
         </label>
         <div class="layui-input-inline">
-            <select name="content_val2" lay-verify="required" lay-search="" lay-filter="type2" style="height: 30px;">
-
+            <select name="franchise_course" id="franchise_course"  lay-verify="required" lay-search="" lay-filter="type2" style="height: 30px;">
+                @if (!empty($data['franchise_course']))
+                    @foreach ($data['franchise_course'] as $franchise_course)
+                        <option value="{{$franchise_course->id}}">{{$franchise_course->title}}</option>
+                    @endforeach
+                @endif
             </select>
         </div>
     </div>
@@ -124,30 +132,6 @@
                 */
             }
         });
-
-        /*导航类型更改*/
-        /*
-        form.on('select(type)', function(data){
-            var type_val = data.value;
-
-            alert(type_val);
-            return false;
-
-            if (type_val == 1) {
-                $("#content_page").show();
-                $("#small_program_page").hide();
-                $("#call_phone_page").hide();
-            } else if(type_val == 2) {
-                $("#content_page").hide();
-                $("#small_program_page").show();
-                $("#call_phone_page").hide();
-            } else if(type_val == 3) {
-                $("#content_page").hide();
-                $("#small_program_page").hide();
-                $("#call_phone_page").show();
-            }
-        });
-        */
     });
 
     $(function () {
@@ -155,6 +139,10 @@
         $("#banner_add").click(function () {
             var image = $("#image").val();
             var sort = $("#sort").val();
+            var type = $("#type").val();
+            var experience_course = $("#experience_course").val();
+            var franchise_course = $("#franchise_course").val();
+
 
             if (image == '') {
                 layer.msg('请上传图片!', {icon: 2, time: 1500});
@@ -164,6 +152,9 @@
             var data = {
                 image: image,
                 sort: sort,
+                type: type,
+                experience_course: experience_course,
+                franchise_course: franchise_course,
                 _token:upload_token
             }
 
