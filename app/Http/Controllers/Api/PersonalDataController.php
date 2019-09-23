@@ -76,4 +76,15 @@ class PersonalDataController
     {
         return $this->service->register($request->input());
     }
+
+    /**
+     * 个人信息
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserInfo(Request $request)
+    {
+        return $this->service->getUserInfo($request->input());
+    }
 }
