@@ -47,4 +47,5 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('uploadUserInfo', 'PersonalDataController@syncPersonalData'); //同步微信用户信息到服务端（保存用户头像昵称）
     Route::post('getPhoneNumber', 'PersonalDataController@getPhoneNumber'); //获取微信授权的手机号
     Route::post('register', 'PersonalDataController@register'); //绑定手机号
+    Route::post('getUserInfo', 'PersonalDataController@getUserInfo'); //个人信息
 });

@@ -224,4 +224,39 @@ class PersonalDataService extends BaseService
             return $this->formatResponse(1, '绑定手机号失败');
         }
     }
+
+    /**
+     * 个人信息
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserInfo($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        if (empty($openid)) {
+            return $this->formatResponse(404, 'openid不能为空');
+        }
+
+        /*获取会员信息*/
+        $member = $this->model::select(['id', 'nickname as nickName', 'avatar as faceImg', 'mobile'])
+            ->where('openid', $data['openid'])
+            ->first();
+        if (empty($member)) {
+            return $this->formatResponse(404, '会员信息为空');
+        }
+
+        /*是否绑定了手机号*/
+        if (!empty($member->mobile)) {
+            $member->is_binding = 1;
+        } else {
+                $member->is_binding = 0;
+        }
+
+        /*会员身份 1，普通用户，2，推广员*/
+        $member->role = 1;
+
+        return $this->formatResponse(0, 'ok', $member);
+    }
 }
