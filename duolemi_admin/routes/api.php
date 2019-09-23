@@ -42,4 +42,5 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('checkLogin', 'PersonalDataController@checkLogin'); //检查用户是否登录过
     Route::post('login', 'PersonalDataController@getPersonalOpenIdByCode'); //微信code换取身份openid
     Route::post('sync', 'PersonalDataController@syncPersonalData'); //同步微信用户信息到服务端
+    Route::post('getPhoneNumber', 'PersonalDataController@getPhoneNumber'); //获取微信授权的手机号
 });

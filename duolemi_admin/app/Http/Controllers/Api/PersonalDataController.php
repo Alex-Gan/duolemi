@@ -53,4 +53,15 @@ class PersonalDataController
     {
         return $this->service->checkLogin($request->input());
     }
+
+    /**
+     * 获取微信授权的手机号
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPhoneNumber(Request $request)
+    {
+        return $this->service->getPhoneNumber($request->input());
+    }
 }
