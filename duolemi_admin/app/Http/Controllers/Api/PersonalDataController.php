@@ -42,4 +42,15 @@ class PersonalDataController
     {
         return $this->service->syncPersonalData($request->input());
     }
+
+    /**
+     * 检查用户是否登录过
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkLogin(Request $request)
+    {
+        return $this->service->checkLogin($request->input());
+    }
 }
