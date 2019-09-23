@@ -108,9 +108,12 @@ CREATE TABLE `dlm_franchise_apply` (
 DROP TABLE IF EXISTS `dlm_withdraw`;
 CREATE TABLE `dlm_withdraw` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '姓名',
-  `mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号',
-  `amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '金额',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `real_name` varchar(50) NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `apply_money` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '申请金额',
+  `bank_name` varchar(50) NOT NULL DEFAULT '' COMMENT '银行名称',
+  `branch_name` varchar(50) NOT NULL DEFAULT '' COMMENT '支行名称',
+  `bank_account` varchar(50) NOT NULL DEFAULT '' COMMENT '银行账户',
   `withdraw_at` datetime DEFAULT NULL COMMENT '提现时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1:待审核 2:已审核',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
