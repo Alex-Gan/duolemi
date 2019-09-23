@@ -22,10 +22,11 @@ class PersonalDataService extends BaseService
      * 通过code微信换取身份openid
      *
      * @param $code
+     * @param $falg
      * @return \Illuminate\Http\JsonResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getPersonalOpenIdByCode($code)
+    public function getPersonalOpenIdByCode($code, $falg = true)
     {
         if (empty($code)) {
             return $this->formatResponse(404, 'code不存在');
@@ -37,10 +38,18 @@ class PersonalDataService extends BaseService
         if (isset($authorize_data['errcode'])) {
             return $this->formatResponse($authorize_data['errcode'], $authorize_data['errmsg']);
         } else {
-            $response_data = [
-                'openid' => $authorize_data['openid']
-            ];
-            return $this->formatResponse(0, 'ok', $response_data);
+            if ($falg) {
+                $response_data = [
+                    'openid' => $authorize_data['openid']
+                ];
+                return $this->formatResponse(0, 'ok', $response_data);
+            } else {
+                $response_data = [
+                    'openid' => $authorize_data['openid'],
+                    'session_key' => $authorize_data['session_key']
+                ];
+                return $response_data;
+            }
         }
     }
 
@@ -130,5 +139,57 @@ class PersonalDataService extends BaseService
         }
 
         return $this->formatResponse(1, '暂无数据');
+    }
+
+    /**
+     * 获取微信授权的手机号
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getPhoneNumber($data)
+    {
+        $authorizeData = $this->getPersonalOpenIdByCode($data['code'], false);
+        if (empty($authorizeData['session_key'])) {
+            return $this->formatResponse(404, 'code已失效');
+        }
+
+        $validator = \Validator::make($data, [
+            'code' => 'required',
+            'encryptedData' => 'required',
+            'iv' => 'required',
+            'openid'=> 'required',
+        ],[
+            'code.required' => 'code不能为空',
+            'encryptedData.required' => 'encryptedData不能为空',
+            'iv.required' => 'iv不能为空',
+            'openid.required' => 'openid不能为空',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->formatResponse(400, $validator->messages()->first());
+        }
+
+        /*获取会员信息*/
+        $member_has = $this->model::where('openid', $data['openid'])->exists();
+        if (empty($member_has)) {
+            return $this->formatResponse(404, '会员信息为空');
+        }
+
+        /*解密手机号*/
+        $appId = config('wx.app_id');
+        $sessionKey = $authorizeData['session_key'];
+        $errCode =  (new WXBizDataCrypt($appId, $sessionKey))->decryptData($data['encryptedData'],$data['iv'], $new_data);
+
+        if ($errCode == 0) {
+            $data_arr = json_decode($new_data, true);
+            /*将手机号存入数据库*/
+            $this->model::where('openid', $data['openid'])->update(['mobile' => $data_arr['purePhoneNumber']]);
+            return $this->formatResponse(0, 'ok', ['mobile' => $data_arr['purePhoneNumber']]);
+        } else {
+
+            return $this->formatResponse(1, '解密获取微信授权的手机号失败');
+        }
     }
 }
