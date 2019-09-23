@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Article;
 use App\Models\Member;
 use App\Models\Withdraw;
 
@@ -110,5 +111,23 @@ class CommissionService extends BaseService
         }
 
         return $this->formatResponse(0, 'ok', $withdraw);
+    }
+
+    /**
+     * 获取文章内容
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getArticleDetails($id)
+    {
+        $content = Article::where('id', $id)->value('content');
+
+        if (!empty($content)) {
+            /*将详情简介内容格式化*/
+            $content = htmlspecialchars_decode($content);
+        }
+
+        return $this->formatResponse(0, 'ok', $content);
     }
 }
