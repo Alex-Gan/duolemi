@@ -59,9 +59,21 @@ class PersonalDataController
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getPhoneNumber(Request $request)
     {
         return $this->service->getPhoneNumber($request->input());
+    }
+
+    /**
+     * 绑定手机号
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        return $this->service->register($request->input());
     }
 }
