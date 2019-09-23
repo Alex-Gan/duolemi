@@ -28,9 +28,7 @@
 <div class="x-body">
     <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so">
-            <input type="text" name="nickname" placeholder="请输入会员姓名" value="@if(!empty($data['_params']['nickname'])) {{$data['_params']['nickname']}}  @endif" autocomplete="off" class="layui-input">
-            <input type="text" name="mobile" placeholder="请输入手机号" value="@if(!empty($data['_params']['mobile'])) {{$data['_params']['mobile']}}  @endif" autocomplete="off" class="layui-input">
-
+            <input type="text" name="real_name" placeholder="请输入提现人姓名" value="@if(!empty($data['_params']['real_name'])) {{$data['_params']['real_name']}}  @endif" autocomplete="off" class="layui-input">
             <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
     </div>
@@ -40,7 +38,7 @@
         <tr>
             <th style="text-align: center">ID</th>
             <th style="text-align: center">提现人</th>
-            <th style="text-align: center">提现手机号</th>
+            <th style="text-align: center">提现账户</th>
             <th style="text-align: center">提现金额</th>
             <th style="text-align: center">提现时间</th>
             <th style="text-align: center">状态</th>
@@ -51,13 +49,13 @@
             @foreach($data['data'] as $item)
                 <tr>
                     <td>{{$item->id}}</td>
-                    <td>{{$item->name}}</td>
-                    <td>{{$item->mobile}}</td>
-                    <td>{{$item->amount}}</td>
+                    <td>{{$item->real_name}}</td>
+                    <td>{{$item->bank_account}}</td>
+                    <td>￥{{$item->apply_money}}元</td>
                     <td>{{$item->withdraw_at}}</td>
                     <td>{{$item->status_text}}</td>
                     <td class="td-manage">
-                        <a title="处理" onclick="edit_franchise_course({{$item->id}})" href="javascript:;">
+                        <a title="处理" onclick="withdraw_detail({{$item->id}})" href="javascript:;">
                             <i class="layui-icon">&#xe642;</i>详情
                         </a>
                     </td>
@@ -74,7 +72,7 @@
 <script>
     layui.use('laypage', function(){
 
-        var url = '/admin/purchase_history/list?'+"{{$data['_query']}}";
+        var url = '/admin/withdraw/list?'+"{{$data['_query']}}";
 
         var laypage = layui.laypage;
 
@@ -99,15 +97,13 @@
         var form = layui.form;
         //监听提交
         form.on('submit(sreach)', function(data){
-            location.href = '/admin/purchase_history/list?name=' + data.field.name +'&mobile=' + data.field.mobile+'&status='+data.field.status;
+            location.href = '/admin/withdraw/list?real_name=' + data.field.real_name;
         });
     });
 
-    /*处理*/
-    function edit_franchise_course(id) {
-        layer.msg('该功能正在完善中，请耐心等待...');
-        return false;
-        location.href = "/admin/experience_course/edit/"+id;
+    /*详情*/
+    function withdraw_detail(id) {
+        location.href = "/admin/withdraw/detail/"+id;
     }
 </script>
 </body>

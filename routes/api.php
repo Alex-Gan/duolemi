@@ -37,6 +37,8 @@ Route::group(['namespace' => 'Api'], function() {
 
 
     Route::post('myCommission', 'CommissionController@myCommission'); //我的佣金
+    Route::post('CashWithdraw', 'CommissionController@CashWithdraw'); //提现申请
+
 
     //个人信息相关的路由
     Route::post('checkLogin', 'PersonalDataController@checkLogin'); //检查用户是否登录过
