@@ -185,11 +185,43 @@ class PersonalDataService extends BaseService
         if ($errCode == 0) {
             $data_arr = json_decode($new_data, true);
             /*将手机号存入数据库*/
-            $this->model::where('openid', $data['openid'])->update(['mobile' => $data_arr['purePhoneNumber']]);
+            //$this->model::where('openid', $data['openid'])->update(['mobile' => $data_arr['purePhoneNumber']]);
             return $this->formatResponse(0, 'ok', ['mobile' => $data_arr['purePhoneNumber']]);
         } else {
 
             return $this->formatResponse(1, '解密获取微信授权的手机号失败');
+        }
+    }
+
+    /**
+     * 绑定手机号
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+        $mobile = !empty($data['mobile']) ? $data['mobile'] : '';
+        if (empty($openid)) {
+            return $this->formatResponse(404, 'openid不能为空');
+        }
+
+        if (empty($mobile)) {
+            return $this->formatResponse(404, '手机号不能为空');
+        }
+
+        /*获取会员信息*/
+        $member_has = $this->model::where('openid', $data['openid'])->exists();
+        if (empty($member_has)) {
+            return $this->formatResponse(404, '会员信息为空');
+        }
+
+        $res = $this->model::where()->update(['mobile' => $mobile]);
+        if ($res) {
+            return $this->formatResponse(0, 'ok');
+        } else {
+            return $this->formatResponse(1, '绑定手机号失败');
         }
     }
 }
