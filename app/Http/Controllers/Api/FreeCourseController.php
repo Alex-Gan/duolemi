@@ -71,4 +71,15 @@ class FreeCourseController
     {
         return $this->service->myFreeCourseDetail($request->input());
     }
+
+    /**
+     * 生成体验课二维码
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function freeCourseCode(Request $request)
+    {
+        return $this->service->freeCourseCode($request->input());
+    }
 }

@@ -29,6 +29,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('leagueDetail', 'LeagueController@leagueDetail'); //加盟课程详情
     Route::post('leagueApply', 'LeagueController@leagueApply'); //申请加盟
     Route::post('freeCourseDetail', 'FreeCourseController@freeCourseDetail'); //体验课详情
+    Route::post('freeCourseCode', 'FreeCourseController@freeCourseCode'); //生成体验课二维码
     Route::post('freeCoursePay', 'FreeCourseController@freeCoursePay'); //支付体验课
     Route::post('notify_url', 'FreeCourseController@notifyUrl'); //支付结果通知
     Route::post('myFreeCourse', 'FreeCourseController@myFreeCourse'); //我的体验课列表
@@ -49,4 +50,8 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('getPhoneNumber', 'PersonalDataController@getPhoneNumber'); //获取微信授权的手机号
     Route::post('register', 'PersonalDataController@register'); //绑定手机号
     Route::post('getUserInfo', 'PersonalDataController@getUserInfo'); //个人信息
+
+
+    //图片合成
+    Route::get('image', 'TestController@image');
 });
