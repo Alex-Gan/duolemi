@@ -236,3 +236,40 @@ CREATE TABLE `dlm_franchise_course_progress` (
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='加盟课进度明细';
+
+
+-- 推广员
+DROP TABLE IF EXISTS `dlm_guider`;
+CREATE TABLE `dlm_guider` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员id',
+  `nickname` varchar(100) NOT NULL COMMENT '会员姓名',
+  `mobile` varchar(20)  NOT NULL DEFAULT '' COMMENT '手机号',
+  `team_join_size` bigint(18) unsigned NOT NULL DEFAULT '0' COMMENT '团队体验课人数',
+  `team_experience_size` bigint(18) unsigned NOT NULL DEFAULT '0' COMMENT '团队加盟人数',
+  `total_comission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计佣金',
+  `expect_comission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '待结算佣金',
+  `comission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金余额',
+  `total_withdraw_comission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计提现',
+  `add_guider_at` datetime DEFAULT NULL COMMENT '加入时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推广员表';
+
+
+-- 推广员佣金明细表
+DROP TABLE IF EXISTS `dlm_guider_detail`;
+CREATE TABLE `dlm_guider_detail` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员id',
+  `source` tinyint(1) NOT NULL DEFAULT '1' COMMENT '订单来源 1、体验课 2、加盟课',
+  `source_order_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '来源订单id',
+  `comission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0:未结算, 1:已结算',
+  `remark` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '备注',
+  `settled_at` datetime DEFAULT NULL COMMENT '结算时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推广员订单表';
