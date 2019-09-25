@@ -40,6 +40,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('myCommission', 'CommissionController@myCommission'); //我的佣金
     Route::post('CashWithdraw', 'CommissionController@CashWithdraw'); //提现申请
     Route::post('withdrawList', 'CommissionController@withdrawList'); //获取佣金提现列表
+    Route::post('withdrawDetail', 'CommissionController@withdrawDetail'); //获取提现人相关信息
     Route::post('getArticleDetails', 'CommissionController@getArticleDetails'); //获取文章内容
 
 
