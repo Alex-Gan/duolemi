@@ -56,7 +56,7 @@ Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
     Route::put('purchase_history/handle/{id}','Admin\PurchaseHistoryController@handle'); //处理购买记录
 
     //推广员相关的路由
-    Route::get('promoter/list','Admin\PromoterController@list'); //推广员列表
+    Route::get('guider/list','Admin\GuiderController@list'); //推广员列表
 
     //会员相关的路由
     Route::get('member/list','Admin\MemberController@list'); //会员列表

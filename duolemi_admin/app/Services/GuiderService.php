@@ -2,26 +2,26 @@
 /**
  * Created by PhpStorm.
  * User: gcs
- * Date: 2019-09-10
- * Time: 10:28
+ * Date: 2019-09-07
+ * Time: 15:20
  */
 namespace App\Services;
 
-use App\Models\Member;
+use App\Models\Guider;
 
-class MemberService extends BaseService
+class GuiderService extends BaseService
 {
     protected $model;
 
     /**
      * 构造方法
      *
-     * MemberService constructor.
-     * @param Member $member
+     * GuiderService constructor.
+     * @param Guider $guider
      */
-    public function __construct(Member $member)
+    public function __construct(Guider $guider)
     {
-        $this->model = $member;
+        $this->model = $guider;
     }
 
     /**
@@ -38,14 +38,18 @@ class MemberService extends BaseService
 
         //搜索条件
         $nickname   = isset($params['nickname']) ? $params['nickname'] : '';
+        $mobile = isset($params['mobile']) ? $params['mobile'] : '';
 
         $wheres = [
-            ['column' => 'id', 'value' => 0, 'operator' => '>'],
-            ['column' => 'nickname', 'value' => '', 'operator' => '!=']
+            ['column' => 'id', 'value' => 0, 'operator' => '>']
         ];
 
         if (!empty($nickname)) {
             $wheres[] = ['column' => 'nickname', 'value' => $nickname, 'operator' => '='];
+        }
+
+        if (!empty($mobile)) {
+            $wheres[] = ['column' => 'mobile', 'value' => $mobile, 'operator' => '='];
         }
 
         //排序
