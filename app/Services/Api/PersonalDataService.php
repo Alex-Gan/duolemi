@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Guider;
 use App\Models\Member;
 
 class PersonalDataService extends BaseService
@@ -261,12 +262,41 @@ class PersonalDataService extends BaseService
         if (!empty($member->mobile)) {
             $member->is_binding = 1;
         } else {
-                $member->is_binding = 0;
+            $member->is_binding = 0;
         }
 
         /*会员身份 1，普通用户，2，推广员*/
-        $member->role = 1;
+        $guider = Guider::where('member_id', $member->id)->exists();
+        $member->role = $guider ? 2 : 1;
 
         return $this->formatResponse(0, 'ok', $member);
+    }
+
+    /**
+     * 我的二维码
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserCode($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        if (empty($openid)) {
+            return $this->formatResponse(404, 'openid不能为空');
+        }
+
+        /*获取会员信息*/
+        $member_has = $this->model::where('openid', $openid)->exists();
+
+        if (empty($member_has)) {
+            return $this->formatResponse(404, '会员信息为空');
+        }
+
+        $data = [
+            'code' => env('APP_URL').'/images/code.jpg'
+        ];
+
+        return $this->formatResponse(0, 'ok', $data);
     }
 }

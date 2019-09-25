@@ -51,7 +51,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('getPhoneNumber', 'PersonalDataController@getPhoneNumber'); //获取微信授权的手机号
     Route::post('register', 'PersonalDataController@register'); //绑定手机号
     Route::post('getUserInfo', 'PersonalDataController@getUserInfo'); //个人信息
-
+    Route::post('getUserCode', 'PersonalDataController@getUserCode'); //获取个人的二维码
 
     //图片合成
     Route::get('image', 'TestController@image');
