@@ -51,7 +51,7 @@ return [
                'sid'  => 1,
                'sname' => '推广员列表',
                'sicon' => '',
-               'srule' => '/admin/promoter/list'
+               'srule' => '/admin/guider/list'
            ]
         ]
     ],
