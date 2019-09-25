@@ -52,4 +52,15 @@ class LeagueController
     {
         return $this->service->myLeagueDetail($request->input());
     }
+
+    /**
+     * 生成加盟课二维码
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function leagueCode(Request $request)
+    {
+        return $this->service->leagueCode($request->input());
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\ExperienceCourse;
 use App\Models\FranchiseApply;
 use App\Models\FranchiseCourse;
 use App\Models\FranchiseCourseProgress;
+use App\Models\Guider;
 use App\Models\Member;
 use App\Models\NavigationSettings;
 
@@ -179,5 +180,116 @@ class LeagueService extends BaseService
         $franchise_apply->join_progress = $franchise_course_progress;
 
         return $this->formatResponse(0, 'ok', $franchise_apply);
+    }
+
+    /**
+     * 生成加盟课二维码
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function leagueCode($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        /*效验身份是否存在*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(404, '会员信息不存在');
+        }
+
+        /*开始生成海报*/
+        $free_course_code = $this->makeLeagueCode($member);
+
+        if ($free_course_code['code'] == 0) {
+            /*创建推客*/
+            $this->createGuider($member->id);
+
+            return $this->formatResponse(0, 'ok', $free_course_code['data']);
+        }
+    }
+
+    /**
+     * 生成海报
+     *
+     * @param $member
+     * @return array
+     */
+    private function makeLeagueCode($member)
+    {
+        try {
+            $bg = public_path()."/images/experience_course_template.jpg";
+            $file_code = public_path()."/images/code.jpg";
+            $img_bg = imagecreatefromjpeg($bg); //背景图
+            $img_code = imagecreatefromjpeg($file_code);//二维码
+            $user_head = imagecreatefromjpeg($member->avatar); //用户头像
+
+            //获取背景图的宽高
+            $width = imagesx($img_bg);
+            $height = imagesy($img_bg);
+
+            $im = imagecreatetruecolor($width, $height);  //创建一张与背景图同样大小的真彩色图像
+            imagecopy($im, $img_bg, 0, 0, 0, 0, $width, $height);
+
+            //添加头像
+            /*获取背景图的宽高*/
+            $head_width = imagesx($user_head);
+            $head_height = imagesy($user_head);
+            imagecopymerge($im, $user_head, 100, 500, 0, 0, $head_width, $head_height, 100);
+
+            // 字体文件
+            $font_file = public_path('/fonts/PINGFANG BOLD_0.TTF');
+            $font_size = 60;
+            $title = "我是".$member->nickname;
+            $title1 = "我为多乐米音乐学院代言!";
+
+            /*添加文字描述*/
+            $color = imagecolorallocate($im, 256, 256, 256); // 灰色
+            imagettftext($im, $font_size, 0, 300, 550, $color, $font_file, $title);
+            imagettftext($im, $font_size, 0, 300, 680, $color, $font_file, $title1);
+
+            $width_code = 258;
+            $height_code = 258;
+
+            /*开始合成*/
+            imagecopymerge($im, $img_code, $width - $width_code - 500, $height - $height_code - 100, 0, 0, $width_code, $height_code, 100);
+
+            /*保存路径*/
+            $relative_path = '/images/user_experience_course/league_code_user_'.$member->id.'.png';
+            imagepng($im, public_path($relative_path));
+
+            return ['code' => 0, 'msg' => 'ok', 'data' => ['code' => env('APP_URL').$relative_path]];
+        } catch (\Exception $exception) {
+            return ['code' => 1, 'msg' => $exception->getMessage()];
+        }
+    }
+
+    /**
+     * 成为推客
+     *
+     * @param $member_id
+     * @return bool
+     */
+    private function createGuider($member_id)
+    {
+        $guider_has = Guider::where('member_id', $member_id)->exists();
+
+        if (!$guider_has) {
+            $member = Member::find($member_id);
+
+            $res = Guider::create([
+                'member_id' => $member_id,
+                'nickname' => $member->nickname,
+                'mobile' => $member->mobile,
+                'add_guider_at' => date("Y-m-d H:i:s", time()),
+                'created_at' => date("Y-m-d H:i:s", time())
+            ]);
+
+            if ($res) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }
