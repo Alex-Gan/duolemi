@@ -19,10 +19,6 @@ class BaseService
             'data' => $data
         ];
 
-        if (empty($data)) {
-            unset($response_data['data']);
-        }
-
         $response = response()->json($response_data);
 
         return $response;

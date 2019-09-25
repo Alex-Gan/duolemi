@@ -2,11 +2,50 @@
 namespace App\Services\Api;
 
 use App\Models\Article;
+use App\Models\Guider;
 use App\Models\Member;
 use App\Models\Withdraw;
 
 class CommissionService extends BaseService
 {
+    /**
+     * 我的佣金
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myCommission($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        if (empty($openid)) {
+            return $this->formatResponse(1, 'openid不能为空');
+        }
+
+        /*检查用户身份*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(1, '用户信息不存在');
+        }
+
+        /*佣金信息*/
+        $guider = Guider::select(['expect_comission as forTheAccount', 'comission as account'])
+            ->where('member_id', $member->id)
+            ->first();
+
+        /*推客信息不存在*/
+        if (empty($guider)) {
+            $guider['forTheAccount'] = 0;
+            $guider['account'] = 0;
+        }
+
+        /*佣金规则*/
+        //$guider['CommissionRules'] = "";
+
+        return $this->formatResponse(0, 'ok', $guider);
+    }
+
+
     /**
      * 提现申请
      *
@@ -110,6 +149,35 @@ class CommissionService extends BaseService
             }
         }
 
+        return $this->formatResponse(0, 'ok', $withdraw);
+    }
+
+    /**
+     * 获取提现人相关信息
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function withdrawDetail($data)
+    {
+        $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        if (empty($openid)) {
+            return $this->formatResponse(1, 'openid不能为空');
+        }
+
+        /*检查用户身份*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(1, '用户信息不存在');
+        }
+
+        /*提现人相关信息*/
+        $withdraw = Withdraw::where('member_id', $member->id)->orderBy('created_at', 'desc')->first();
+
+        if (empty($withdraw)) {
+            $withdraw = [];
+        }
         return $this->formatResponse(0, 'ok', $withdraw);
     }
 

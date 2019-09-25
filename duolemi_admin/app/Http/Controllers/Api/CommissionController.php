@@ -21,6 +21,17 @@ class CommissionController
     }
 
     /**
+     * 我的佣金
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myCommission(Request $request)
+    {
+        return $this->service->myCommission($request->input());
+    }
+
+    /**
      * 提现申请
      *
      * @param Request $request
@@ -40,6 +51,17 @@ class CommissionController
     public function withdrawList(Request $request)
     {
         return $this->service->withdrawList($request->input());
+    }
+
+    /**
+     * 获取提现人相关信息
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function withdrawDetail(Request $request)
+    {
+        return $this->service->withdrawDetail($request->input());
     }
 
     /**
