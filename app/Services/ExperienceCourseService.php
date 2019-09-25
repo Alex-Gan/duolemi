@@ -87,15 +87,16 @@ class ExperienceCourseService extends BaseService
     public function add($params)
     {
         $data = [
-            'name'             => $params['name'],
-            'introduction'     => $params['introduction'],
-            'banner'           => json_encode($params['banner']),
-            'details'          => htmlspecialchars($params['details']),
-            'sort'             => intval($params['sort']),
-            'original_price'   => $params['original_price'],
-            'experience_price' => $params['sort'],
-            'status'           => intval($params['status']),
-            'created_at'       => date("Y-m-d H:i:s", time())
+            'name'              => $params['name'],
+            'introduction'      => $params['introduction'],
+            'banner'            => json_encode($params['banner']),
+            'details'           => htmlspecialchars($params['details']),
+            'sort'              => intval($params['sort']),
+            'original_price'    => $params['original_price'],
+            'experience_price'  => $params['experience_price'],
+            'rebate_commission' => $params['rebate_commission'],
+            'status'            => intval($params['status']),
+            'created_at'        => date("Y-m-d H:i:s", time())
         ];
 
         $res = ExperienceCourse::create($data);
@@ -173,6 +174,7 @@ class ExperienceCourseService extends BaseService
         $experience_course_data->sort = $params['sort'];
         $experience_course_data->original_price = $params['original_price'];
         $experience_course_data->experience_price = $params['experience_price'];
+        $experience_course_data->rebate_commission = $params['rebate_commission'];
         $experience_course_data->status = $params['status'];
         $res = $experience_course_data->save();
 

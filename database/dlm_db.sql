@@ -273,3 +273,7 @@ CREATE TABLE `dlm_guider_detail` (
   `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推广员订单表';
+
+
+alter table `dlm_franchise_course` add `rebate_commission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金返利';
+alter table `dlm_experience_course` add `rebate_commission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金返利';

@@ -45,6 +45,7 @@
             <th style="text-align: center">课程名称</th>
             <th style="text-align: center">价格</th>
             <th style="text-align: center">banner图</th>
+            <th style="text-align: center">佣金返利</th>
             <th style="text-align: center">排序</th>
             <th style="text-align: center">上下架状态</th>
             <th style="text-align: center">加入时间</th>
@@ -60,6 +61,7 @@
                     <td>
                         <img width="100" height="75" src="{{$item->banner}}"/>
                     </td>
+                    <td>￥{{$item->rebate_commission}}元</td>
                     <td>{{$item->sort}}</td>
                     <td class="td-status">
                         @if ($item->status == 1)

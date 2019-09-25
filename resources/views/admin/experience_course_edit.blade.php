@@ -112,7 +112,14 @@
                 <input type="text" name="experience_price" placeholder="￥" required="" value="{{$edit_data->experience_price}}" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
-
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>佣金返利
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="rebate_commission" value="{{$edit_data->rebate_commission}}" placeholder="￥" autocomplete="off" class="layui-input">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
                 <span class="x-red">*</span>上下架
@@ -127,7 +134,7 @@
             <label for="L_repass" class="layui-form-label">
             </label>
             <button  class="layui-btn" lay-filter="add" lay-submit="">
-                添加
+                编辑
             </button>
             <button class="layui-btn" lay-filter="back" onclick="javascript :history.back(-1);">
                 返回

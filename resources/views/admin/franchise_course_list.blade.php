@@ -53,6 +53,7 @@
             <th style="text-align: center">加盟标题</th>
             <th style="text-align: center">副标题</th>
             <th style="text-align: center">banner图</th>
+            <th style="text-align: center">佣金返利</th>
             <th style="text-align: center">加入时间</th>
             <th style="text-align: center" width="15%">操作</th>
         </thead>
@@ -66,6 +67,7 @@
                     <td>
                         <img width="100" height="75" src="{{$item->banner}}"/>
                     </td>
+                    <td>￥{{$item->rebate_commission}}元</td>
                     <td>{{$item->created_at}}</td>
                     <td class="td-manage">
                         <a title="编辑" onclick="edit_franchise_course({{$item->id}})" href="javascript:;">
