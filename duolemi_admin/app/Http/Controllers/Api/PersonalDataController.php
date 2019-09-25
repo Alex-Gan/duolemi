@@ -87,4 +87,15 @@ class PersonalDataController
     {
         return $this->service->getUserInfo($request->input());
     }
+
+    /**
+     * 我的二维码
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserCode(Request $request)
+    {
+        return $this->service->getUserCode($request->input());
+    }
 }
