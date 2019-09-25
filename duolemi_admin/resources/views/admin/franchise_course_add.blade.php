@@ -63,6 +63,14 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>佣金返利
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="rebate_commission" placeholder="￥" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label for="L_email" class="layui-form-label">
                 <span class="x-red">*</span>详情介绍
             </label>

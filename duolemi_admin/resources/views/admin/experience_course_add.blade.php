@@ -97,7 +97,14 @@
                 <input type="text" name="experience_price" placeholder="￥" required="" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
-
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>佣金返利
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="rebate_commission" placeholder="￥" autocomplete="off" class="layui-input">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
                 <span class="x-red">*</span>上下架

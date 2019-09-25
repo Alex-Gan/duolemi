@@ -86,6 +86,7 @@ class FranchiseCourseService extends BaseService
         $data = [
             'title'      => $params['title'],
             'subtitle'   => $params['subtitle'],
+            'rebate_commission' => $params['rebate_commission'],
             'banner'     => json_encode($params['banner']),
             'details'    => htmlspecialchars($params['details']),
             'created_at' => date("Y-m-d H:i:s", time())
@@ -160,6 +161,7 @@ class FranchiseCourseService extends BaseService
         $franchise_course_data = FranchiseCourse::find($id);
         $franchise_course_data->title = $params['title'];
         $franchise_course_data->subtitle = $params['subtitle'];
+        $franchise_course_data->rebate_commission = $params['rebate_commission'];
         $franchise_course_data->banner = json_encode($params['banner']);
         $franchise_course_data->details = htmlspecialchars($params['details']);
         $res = $franchise_course_data->save();
