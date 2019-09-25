@@ -38,6 +38,16 @@ class PersonalDataService extends BaseService
         if (isset($authorize_data['errcode'])) {
             return $this->formatResponse($authorize_data['errcode'], $authorize_data['errmsg']);
         } else {
+
+            /*将openid存入member表*/
+            $member_has = Member::where('openid', $authorize_data['openid'])->exists();
+            if (!$member_has) {
+                Member::create([
+                    'openid' => $authorize_data['openid'],
+                    'created_at' => date("Y-m-d", time())
+                ]);
+            }
+
             if ($falg) {
                 $response_data = [
                     'openid' => $authorize_data['openid']
