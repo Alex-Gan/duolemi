@@ -35,6 +35,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('myFreeCourse', 'FreeCourseController@myFreeCourse'); //我的体验课列表
     Route::post('myFreeCourseDetail', 'FreeCourseController@myFreeCourseDetail'); //我的体验课详情
     Route::post('myLeagueDetail', 'LeagueController@myLeagueDetail'); //我的加盟详情
+    Route::post('leagueCode', 'LeagueController@leagueCode'); //生成加盟课二维码
 
 
     Route::post('myCommission', 'CommissionController@myCommission'); //我的佣金
