@@ -5,9 +5,9 @@ return [
     //  +---------------------------------
 
     // 小程序app_id
-    'app_id' => 'wxc56da5478d843331', //wxdf281d0380146243
+    'app_id' => 'wx6aab2e266059a588', //wxdf281d0380146243
     // 小程序app_secret
-    'app_secret' => '3a2dda7a81eb536b5f7929ac820f7e43', //2bbf3576322c808644aad86fb1cf3dc6
+    'app_secret' => '6904c80daac1a6e691b05b01a9057cfe', //2bbf3576322c808644aad86fb1cf3dc6
 
     // 微信使用code换取用户openid及session_key的url地址
     'login_url' => "https://api.weixin.qq.com/sns/jscode2session?" .
@@ -20,6 +20,6 @@ return [
     'expires_in' => 7200,
 
     // 微信支付参数
-    'mch_id' => '1378450802', //微信支付分配的商户号
-    'key' => 'junQDS5PWvFTJHHjTOePx50e0ntz7nxn', //支付密钥
+    'mch_id' => '1235897302', //微信支付分配的商户号
+    'key' => 'ningboduolemiyingyuewenhuachuanb', //支付密钥
 ];
