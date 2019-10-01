@@ -228,7 +228,7 @@ class PersonalDataService extends BaseService
             return $this->formatResponse(404, '会员信息为空');
         }
 
-        $res = $this->model::where()->update(['mobile' => $mobile]);
+        $res = $this->model::where('openid', $openid)->update(['mobile' => $mobile]);
         if ($res) {
             return $this->formatResponse(0, 'ok');
         } else {
