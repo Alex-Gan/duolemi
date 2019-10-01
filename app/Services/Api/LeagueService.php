@@ -218,8 +218,8 @@ class LeagueService extends BaseService
     private function makeLeagueCode($member)
     {
         try {
-            $bg = public_path()."/images/experience_course_template.jpg";
-            $file_code = public_path()."/images/code.jpg";
+            $bg = public_path()."/images1/experience_course_template.jpg";
+            $file_code = public_path()."/images1/code.jpg";
             $img_bg = imagecreatefromjpeg($bg); //背景图
             $img_code = imagecreatefromjpeg($file_code);//二维码
             $user_head = imagecreatefromjpeg($member->avatar); //用户头像
@@ -255,7 +255,7 @@ class LeagueService extends BaseService
             imagecopymerge($im, $img_code, $width - $width_code - 500, $height - $height_code - 100, 0, 0, $width_code, $height_code, 100);
 
             /*保存路径*/
-            $relative_path = '/images/user_experience_course/league_code_user_'.$member->id.'.png';
+            $relative_path = '/images1/user_experience_course/league_code_user_'.$member->id.'.png';
             imagepng($im, public_path($relative_path));
 
             return ['code' => 0, 'msg' => 'ok', 'data' => ['code' => env('APP_URL').$relative_path]];
