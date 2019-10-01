@@ -103,7 +103,7 @@ class FreeCourseService extends BaseService
         }
 
         //测试数据
-        $openid = 'oeGsr5JJzSBAmtIZZMUvI9US095E';
+        //$openid = 'oeGsr5JJzSBAmtIZZMUvI9US095E';
 
         /*附加信息*/
         $attach = [
