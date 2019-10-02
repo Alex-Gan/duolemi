@@ -294,7 +294,7 @@ class PersonalDataService extends BaseService
         }
 
         $data = [
-            'code' => env('APP_URL').'/images/code.jpg'
+            'code' => env('APP_URL').'/images1/code.jpg'
         ];
 
         return $this->formatResponse(0, 'ok', $data);
