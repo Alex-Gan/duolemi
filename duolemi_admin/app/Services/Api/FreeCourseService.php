@@ -189,6 +189,7 @@ class FreeCourseService extends BaseService
                             if (!empty($guider)) {
                                 /*体验课返利佣金*/
                                 $expect_comission = ExperienceCourse::where('id', $attach_arr['experience_course_id'])->value('rebate_commission');
+                                Guider::where('id', $guider->id)->increment('team_experience_size');
                                 Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
                             }
                         }
