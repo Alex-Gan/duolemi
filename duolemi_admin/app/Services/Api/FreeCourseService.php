@@ -110,7 +110,8 @@ class FreeCourseService extends BaseService
             'openid' => $openid,
             'experience_course_id' => $id,
             'name' => $data['name'],
-            'mobile' => $data['mobile']
+            'mobile' => $data['mobile'],
+            'superOpenid' => !empty($data['superOpenid'])? $data['superOpenid'] : ''
         ];
 
         /*支付金额*/
@@ -178,6 +179,20 @@ class FreeCourseService extends BaseService
 
                     /*创建购买体验课记录*/
                     $res = PurchaseHistory::create($create_data);
+
+                    /*推广佣金*/
+                    $superOpenid = $attach_arr['superOpenid'];
+                    if (!empty($superOpenid)) {
+                        $member = Member::where('openid', $superOpenid)->first();
+                        if (!empty($member)) {
+                            $guider = Guider::where('member_id', $member->id)->first();
+                            if (!empty($guider)) {
+                                /*体验课返利佣金*/
+                                $expect_comission = ExperienceCourse::where('id', $attach_arr['experience_course_id'])->value('rebate_commission');
+                                Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
+                            }
+                        }
+                    }
 
                     /*体验课进度明细*/
                     /*
