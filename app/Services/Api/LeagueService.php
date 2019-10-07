@@ -141,7 +141,7 @@ class LeagueService extends BaseService
                     $guider = Guider::where('member_id', $member->id)->first();
                     if (!empty($guider)) {
                         /*加盟课返利佣金*/
-                        $expect_comission = FranchiseCourse::where('id', $res->id)->value('rebate_commission');
+                        $expect_comission = FranchiseCourse::where('id', $res->franchise_course_id)->value('rebate_commission');
                         Guider::where('id', $guider->id)->increment('team_experience_size');
                         Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
                     }
