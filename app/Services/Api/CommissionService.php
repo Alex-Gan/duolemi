@@ -292,6 +292,12 @@ class CommissionService extends BaseService
         return $this->formatResponse(0, 'ok', $customer);
     }
 
+    /**
+     * 我的客户详情
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function myCustomerDetail($data)
     {
         $openid = $data['openid'];
@@ -361,6 +367,6 @@ class CommissionService extends BaseService
         /*进度明细*/
         $customerDetail['experience_progress'] = $experience_progress;
 
-        return $customerDetail;
+        return $this->formatResponse(0, 'ok', $customerDetail);
     }
 }
