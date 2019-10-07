@@ -371,7 +371,7 @@ class FreeCourseService extends BaseService
         }
 
         /*开始生成海报*/
-        $free_course_code = $this->makeFreeCourseCode($member);
+        $free_course_code = $this->makeFreeCourseCode($member); 
 
         if ($free_course_code['code'] == 0) {
             /*创建推客*/
