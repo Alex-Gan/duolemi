@@ -142,6 +142,10 @@ class LeagueService extends BaseService
                         Guider::where('id', $guider->id)->increment('team_join_size');
                         Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
 
+
+                        /*课程名称*/
+                        $courseName = FranchiseCourse::where('id', $res->franchise_course_id)->value('title');
+
                         /*我的客户*/
                         Customer::create([
                             'member_id' => $member->id,
@@ -152,7 +156,7 @@ class LeagueService extends BaseService
                             'date' => date("Y-m-d H:i:s", time()),
                             'money' => $expect_comission,
                             'type' => 2,
-                            'courseName' => $member->avatar,
+                            'courseName' => $courseName,
                             'source_order_id' => $res->id,
                             'created_at' => date("Y-m-d H:i:s", time())
                         ]);
