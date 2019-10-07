@@ -173,10 +173,16 @@ class CommissionService extends BaseService
         }
 
         /*提现人相关信息*/
-        $withdraw = Withdraw::where('member_id', $member->id)->orderBy('created_at', 'desc')->first();
+        $withdraw = Withdraw::select(['real_name as realName', 'bank_name as bankName', 'branch_name as branchName', 'bank_account as bankAccount
+', 'apply_money as account'])
+            ->where('member_id', $member->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         if (empty($withdraw)) {
             $withdraw = [];
+        } else {
+            $withdraw['name'] = $member->nickname;
         }
         return $this->formatResponse(0, 'ok', $withdraw);
     }
