@@ -44,6 +44,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('withdrawDetail', 'CommissionController@withdrawDetail'); //获取提现人相关信息
     Route::post('getArticleDetails', 'CommissionController@getArticleDetails'); //获取文章内容
     Route::post('myCustomer', 'CommissionController@myCustomer'); //我的客户-根据关键词或获取全部
+    Route::post('myCustomerDetail', 'CommissionController@myCustomerDetail'); //我的客户详情
 
 
     //个人信息相关的路由
