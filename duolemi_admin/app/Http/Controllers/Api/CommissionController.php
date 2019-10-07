@@ -85,4 +85,15 @@ class CommissionController
     {
         return $this->service->myCustomer($request->input());
     }
+
+    /**
+     * 我的客户详情
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myCustomerDetail(Request $request)
+    {
+        return $this->service->myCustomerDetail($request->input());
+    }
 }

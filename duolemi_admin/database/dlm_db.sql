@@ -293,6 +293,7 @@ CREATE TABLE `dlm_customer` (
   `moneyStatus` tinyint(1) NOT NULL DEFAULT '1' COMMENT '佣金结算状态 1:待结算 2:已结算',
   `type` varchar(255) NOT NULL COMMENT '1,体验课，2，加盟课',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '加盟进度状态 1:信息已提交 2:资质已审核 3:教师培训 4:已开课 5:加盟完成 6:已结算返佣',
+  `source_order_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '来源订单id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
   PRIMARY KEY (`id`)

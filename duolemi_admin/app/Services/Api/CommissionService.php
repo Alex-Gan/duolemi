@@ -3,6 +3,9 @@ namespace App\Services\Api;
 
 use App\Models\Article;
 use App\Models\Customer;
+use App\Models\ExperienceCourse;
+use App\Models\ExperienceProgress;
+use App\Models\FranchiseCourseProgress;
 use App\Models\Guider;
 use App\Models\Member;
 use App\Models\Withdraw;
@@ -246,5 +249,47 @@ class CommissionService extends BaseService
         }
 
         return $this->formatResponse(0, 'ok', $customer);
+    }
+
+    public function myCustomerDetail($data)
+    {
+        $openid = $data['openid'];
+        $id = $data['id'];
+
+        if (empty($openid)) {
+            return $this->formatResponse(1, 'openid不能为空');
+        }
+
+        if (empty($id)) {
+            return $this->formatResponse(1, 'id不能为空');
+        }
+
+        /*检查用户身份*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(1, '用户信息不存在');
+        }
+
+        /*客户资料*/
+        $customerDetail =  Customer::select(['id', 'source_order_id','name', 'mobile', 'type'])->where('id', $id)->first();
+        $type = $customerDetail['type'];
+        $source_order_id = $customerDetail['source_order_id'];
+        unset($customerDetail['type']);
+        unset($customerDetail['source_order_id']);
+
+        if ($type == 1) { //体验课
+            $experience_progress = ExperienceProgress::where('purchase_history_id', $source_order_id)
+                ->orderBy('processing_at', 'desc')
+                ->get();
+        } else { //加盟课
+            $experience_progress = FranchiseCourseProgress::where('franchise_apply_id', $source_order_id)
+                ->orderBy('processing_at', 'desc')
+                ->get();
+        }
+
+        /*进度明细*/
+        $customerDetail['experience_progress'] = $experience_progress;
+
+        return $customerDetail;
     }
 }
