@@ -128,6 +128,21 @@ class LeagueService extends BaseService
         $res = FranchiseApply::create($save_data);
 
         if ($res) {
+            /*推广佣金*/
+            $superOpenid = $data['superOpenid'];
+            if (!empty($superOpenid)) {
+                $member = Member::where('openid', $superOpenid)->first();
+                if (!empty($member)) {
+                    $guider = Guider::where('member_id', $member->id)->first();
+                    if (!empty($guider)) {
+                        /*加盟课返利佣金*/
+                        $expect_comission = FranchiseCourse::where('id', $res->id)->value('rebate_commission');
+                        Guider::where('id', $guider->id)->increment('team_experience_size');
+                        Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
+                    }
+                }
+            }
+
             /*加盟进度 to-do: 加盟进度*/
             /*
             FranchiseCourseProgress::create([
