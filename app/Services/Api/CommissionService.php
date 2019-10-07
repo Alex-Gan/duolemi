@@ -2,6 +2,7 @@
 namespace App\Services\Api;
 
 use App\Models\Article;
+use App\Models\Customer;
 use App\Models\Guider;
 use App\Models\Member;
 use App\Models\Withdraw;
@@ -203,5 +204,47 @@ class CommissionService extends BaseService
         }
 
         return $this->formatResponse(0, 'ok', $content);
+    }
+
+    /**
+     * 我的客户-根据关键词或获取全部
+     *
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myCustomer($data)
+    {
+        $openid = $data['openid'];
+        $keyword = $data['keyword']; //关键词，根据客户名称或手机号搜索
+
+        if (empty($openid)) {
+            return $this->formatResponse(1, 'openid不能为空');
+        }
+
+        /*检查用户身份*/
+        $member = Member::where('openid', $openid)->first();
+        if (empty($member)) {
+            return $this->formatResponse(1, '用户信息不存在');
+        }
+
+        /*我的客户*/
+        if (!empty($keyword)) {
+            $customer = Customer::select(['id', 'faceImg', 'name', 'mobile', 'created_at as date', 'money', 'moneyStatus', 'type', 'status'])
+                ->where('superior_member_id', $member->id)
+                ->where(function ($query) use($keyword){
+                    $query->where('name', '=', $keyword)->orWhere(function($query) use($keyword){
+                        $query->where('mobile','=', $keyword);
+                    });
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $customer = Customer::select(['id', 'faceImg', 'name', 'mobile', 'created_at as date', 'money', 'moneyStatus', 'type', 'status'])
+                ->where('superior_member_id', $member->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        return $this->formatResponse(0, 'ok', $customer);
     }
 }

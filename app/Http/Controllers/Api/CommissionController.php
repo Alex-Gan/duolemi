@@ -74,4 +74,15 @@ class CommissionController
     {
         return $this->service->getArticleDetails($request->input('id'));
     }
+
+    /**
+     * 我的客户-根据关键词或获取全部
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function myCustomer(Request $request)
+    {
+        return $this->service->myCustomer($request->input());
+    }
 }

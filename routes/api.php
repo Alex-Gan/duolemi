@@ -43,6 +43,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('withdrawList', 'CommissionController@withdrawList'); //获取佣金提现列表
     Route::post('withdrawDetail', 'CommissionController@withdrawDetail'); //获取提现人相关信息
     Route::post('getArticleDetails', 'CommissionController@getArticleDetails'); //获取文章内容
+    Route::post('myCustomer', 'CommissionController@myCustomer'); //我的客户-根据关键词或获取全部
 
 
     //个人信息相关的路由
@@ -53,6 +54,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('register', 'PersonalDataController@register'); //绑定手机号
     Route::post('getUserInfo', 'PersonalDataController@getUserInfo'); //个人信息
     Route::post('getUserCode', 'PersonalDataController@getUserCode'); //获取个人的二维码
+
 
     //图片合成
     Route::get('image', 'TestController@image');

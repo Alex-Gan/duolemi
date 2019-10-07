@@ -277,3 +277,23 @@ CREATE TABLE `dlm_guider_detail` (
 
 alter table `dlm_franchise_course` add `rebate_commission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金返利';
 alter table `dlm_experience_course` add `rebate_commission` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '佣金返利';
+
+
+-- 我的客户关系表
+DROP TABLE IF EXISTS `dlm_customer`;
+CREATE TABLE `dlm_customer` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员id',
+  `superior_member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上级会员id',
+  `faceImg` varchar(255) NOT NULL COMMENT '头像',
+  `name` varchar(100) NOT NULL COMMENT '姓名',
+  `mobile` varchar(255) NOT NULL COMMENT '手机号',
+  `date` varchar(50) NOT NULL COMMENT '推荐时间',
+  `money` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '预估佣金',
+  `moneyStatus` tinyint(1) NOT NULL DEFAULT '1' COMMENT '佣金结算状态 1:待结算 2:已结算',
+  `type` varchar(255) NOT NULL COMMENT '1,体验课，2，加盟课',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '加盟进度状态 1:信息已提交 2:资质已审核 3:教师培训 4:已开课 5:加盟完成 6:已结算返佣',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='我的客户关系表';
