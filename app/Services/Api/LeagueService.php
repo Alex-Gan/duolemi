@@ -127,9 +127,14 @@ class LeagueService extends BaseService
         /*存入数据库*/
         $res = FranchiseApply::create($save_data);
 
+        \Log::info('res:'.json_encode($res));
+
         if ($res) {
             /*推广佣金*/
             $superOpenid = $data['superOpenid'];
+
+            \Log::info('superOpenid:'.$superOpenid);
+            
             if (!empty($superOpenid)) {
                 $member = Member::where('openid', $superOpenid)->first();
                 if (!empty($member)) {
