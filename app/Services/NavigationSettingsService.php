@@ -149,8 +149,8 @@ class NavigationSettingsService extends BaseService
                 'path' => 'pages/index/index'
             ],
             [
-                'title' => '首页1',
-                'path' => 'pages/index1/index1'
+                'title' => '我的客户',
+                'path' => 'pages/user-customer/index'
             ],
             [
                 'title' => '测试页面',
