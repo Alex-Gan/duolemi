@@ -302,7 +302,7 @@ class PersonalDataService extends BaseService
                 'created_at' => date("Y-m-d H:i:s", time())
             ]);
         }
-        
+
         $data = [
             'code' => env('APP_URL').'/images1/code.jpg'
         ];
