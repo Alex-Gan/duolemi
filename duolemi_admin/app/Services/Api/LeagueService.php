@@ -134,7 +134,7 @@ class LeagueService extends BaseService
             $superOpenid = $data['superOpenid'];
 
             \Log::info('superOpenid:'.$superOpenid);
-            
+
             if (!empty($superOpenid)) {
                 $member = Member::where('openid', $superOpenid)->first();
                 if (!empty($member)) {

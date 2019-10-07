@@ -141,8 +141,6 @@ class FreeCourseService extends BaseService
         libxml_disable_entity_loader(true);
         $response_arr = json_decode(json_encode(simplexml_load_string($xmlData, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
 
-        \Log::info('response_arr:'.json_encode($response_arr));
-
         if ($response_arr['return_code'] === 'SUCCESS' && $response_arr['result_code'] === 'SUCCESS') {
 
             /*支付结果返回的sign*/
