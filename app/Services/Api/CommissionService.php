@@ -251,7 +251,7 @@ class CommissionService extends BaseService
         foreach ($customer as &$item) {
             /*课程类型*/
             if ($item['type'] == 1) {
-                $item['type'] = '体验课';
+                $item['type_text'] = '体验课';
 
                 /*状态*/
                 if ($item['status'] == 1) {
@@ -264,7 +264,7 @@ class CommissionService extends BaseService
                     $item['status'] = '体验完成';
                 }
             } else {
-                $item['type'] = '加盟课';
+                $item['type_text'] = '加盟课';
 
                 if ($item['status'] == 1) {
                     $item['status'] = '信息已提交';
