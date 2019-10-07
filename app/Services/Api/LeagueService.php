@@ -2,6 +2,7 @@
 namespace App\Services\Api;
 
 use App\Models\Banner;
+use App\Models\Customer;
 use App\Models\ExperienceCourse;
 use App\Models\FranchiseApply;
 use App\Models\FranchiseCourse;
@@ -127,23 +128,34 @@ class LeagueService extends BaseService
         /*存入数据库*/
         $res = FranchiseApply::create($save_data);
 
-        \Log::info('res:'.json_encode($res));
-
         if ($res) {
             /*推广佣金*/
             $superOpenid = $data['superOpenid'];
 
-            \Log::info('superOpenid:'.$superOpenid);
-
             if (!empty($superOpenid)) {
-                $member = Member::where('openid', $superOpenid)->first();
-                if (!empty($member)) {
-                    $guider = Guider::where('member_id', $member->id)->first();
+                $super_member = Member::where('openid', $superOpenid)->first();
+                if (!empty($super_member)) {
+                    $guider = Guider::where('member_id', $super_member->id)->first();
                     if (!empty($guider)) {
                         /*加盟课返利佣金*/
                         $expect_comission = FranchiseCourse::where('id', $res->franchise_course_id)->value('rebate_commission');
-                        Guider::where('id', $guider->id)->increment('team_experience_size');
+                        Guider::where('id', $guider->id)->increment('team_join_size');
                         Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
+
+                        /*我的客户*/
+                        Customer::create([
+                            'member_id' => $member->id,
+                            'superior_member_id' => $super_member->id,
+                            'faceImg' => $member->avatar,
+                            'name' => $member->nickname,
+                            'mobile' => $member->mobile,
+                            'date' => date("Y-m-d H:i:s", time()),
+                            'money' => $expect_comission,
+                            'type' => 2,
+                            'courseName' => $member->avatar,
+                            'source_order_id' => $res->id,
+                            'created_at' => date("Y-m-d H:i:s", time())
+                        ]);
                     }
                 }
             }
