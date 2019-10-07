@@ -285,12 +285,24 @@ class PersonalDataService extends BaseService
         }
 
         /*获取会员信息*/
-        $member_has = $this->model::where('openid', $openid)->exists();
+        $member = $this->model::where('openid', $openid)->first();
 
-        if (empty($member_has)) {
+        if (empty($member)) {
             return $this->formatResponse(404, '会员信息为空');
         }
 
+        /*判断是否为推广员*/
+        $guider_has = Guider::where('member_id', $member->id)->exists();
+        if (empty($guider_has)) {
+            Guider::create([
+                'member_id' => $member->id,
+                'nickname' => $member->nickname,
+                'mobile' => $member->mobile,
+                'add_guider_at' => date("Y-m-d H:i:s", time()),
+                'created_at' => date("Y-m-d H:i:s", time())
+            ]);
+        }
+        
         $data = [
             'code' => env('APP_URL').'/images1/code.jpg'
         ];
