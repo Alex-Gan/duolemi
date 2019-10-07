@@ -371,14 +371,7 @@ class FreeCourseService extends BaseService
         }
 
         /*开始生成海报*/
-        $free_course_code = $this->makeFreeCourseCode($member); 
-
-        if ($free_course_code['code'] == 0) {
-            /*创建推客*/
-            $this->createGuider($member->id);
-
-            return $this->formatResponse(0, 'ok', $free_course_code['data']);
-        }
+        return $this->makeFreeCourseCode($member);
     }
 
     /**
@@ -430,9 +423,12 @@ class FreeCourseService extends BaseService
             $relative_path = '/images1/user_experience_course/experience_course_user_'.$member->id.'.png';
             imagepng($im, public_path($relative_path));
 
-            return ['code' => 0, 'msg' => 'ok', 'data' => ['code' => env('APP_URL').$relative_path]];
+            /*创建推客*/
+            $this->createGuider($member->id);
+
+            return $this->formatResponse(0, 'ok', ['code' => env('APP_URL').$relative_path]);
         } catch (\Exception $exception) {
-            return ['code' => 1, 'msg' => $exception->getMessage()];
+            return $this->formatResponse(1, $exception->getMessage());
         }
     }
 
