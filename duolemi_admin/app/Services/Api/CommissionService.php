@@ -232,7 +232,7 @@ class CommissionService extends BaseService
 
         /*我的客户*/
         if (!empty($keyword)) {
-            $customer = Customer::select(['id', 'faceImg', 'name', 'mobile', 'created_at as date', 'money', 'moneyStatus', 'type', 'status'])
+            $customer = Customer::select(['id', 'faceImg', 'name', 'mobile', 'created_at as date', 'money', 'moneyStatus', 'type', 'courseName', 'status'])
                 ->where('superior_member_id', $member->id)
                 ->where(function ($query) use($keyword){
                     $query->where('name', '=', $keyword)->orWhere(function($query) use($keyword){
@@ -246,6 +246,47 @@ class CommissionService extends BaseService
                 ->where('superior_member_id', $member->id)
                 ->orderBy('created_at', 'desc')
                 ->get();
+        }
+
+        foreach ($customer as &$item) {
+            /*课程类型*/
+            if ($item['type'] == 1) {
+                $item['type'] = '体验课';
+
+                /*状态*/
+                if ($item['status'] == 1) {
+                    $item['status'] = '已购买';
+                } else if ($item['status'] == 2) {
+                    $item['status'] = '已面试';
+                } else if ($item['status'] == 3) {
+                    $item['status'] = '正在体验';
+                } else if ($item['status'] == 4) {
+                    $item['status'] = '体验完成';
+                }
+            } else {
+                $item['type'] = '加盟课';
+
+                if ($item['status'] == 1) {
+                    $item['status'] = '信息已提交';
+                } else if ($item['status'] == 2) {
+                    $item['status'] = '资质已审核';
+                } else if ($item['status'] == 3) {
+                    $item['status'] = '教师培训';
+                } else if ($item['status'] == 4) {
+                    $item['status'] = '已开课';
+                } else if ($item['status'] == 5) {
+                    $item['status'] = '加盟完成';
+                } else if ($item['status'] == 6) {
+                    $item['status'] = '已结算返佣';
+                }
+            }
+
+            /*佣金结算状态*/
+            if ($item['moneyStatus'] == 1) {
+                $item['moneyStatus'] = '待结算';
+            } else {
+                $item['moneyStatus'] = '已结算';
+            }
         }
 
         return $this->formatResponse(0, 'ok', $customer);
@@ -281,10 +322,40 @@ class CommissionService extends BaseService
             $experience_progress = ExperienceProgress::where('purchase_history_id', $source_order_id)
                 ->orderBy('processing_at', 'desc')
                 ->get();
+
+            foreach ($experience_progress as &$item) {
+                /*状态*/
+                if ($item['status'] == 1) {
+                    $item['status'] = '已购买';
+                } else if ($item['status'] == 2) {
+                    $item['status'] = '已面试';
+                } else if ($item['status'] == 3) {
+                    $item['status'] = '正在体验';
+                } else if ($item['status'] == 4) {
+                    $item['status'] = '体验完成';
+                }
+            }
         } else { //加盟课
             $experience_progress = FranchiseCourseProgress::where('franchise_apply_id', $source_order_id)
                 ->orderBy('processing_at', 'desc')
                 ->get();
+
+            foreach ($experience_progress as &$item) {
+                /*状态*/
+                if ($item['status'] == 1) {
+                    $item['status'] = '信息已提交';
+                } else if ($item['status'] == 2) {
+                    $item['status'] = '资质已审核';
+                } else if ($item['status'] == 3) {
+                    $item['status'] = '教师培训';
+                } else if ($item['status'] == 4) {
+                    $item['status'] = '已开课';
+                } else if ($item['status'] == 5) {
+                    $item['status'] = '加盟完成';
+                } else if ($item['status'] == 6) {
+                    $item['status'] = '已结算返佣';
+                }
+            }
         }
 
         /*进度明细*/

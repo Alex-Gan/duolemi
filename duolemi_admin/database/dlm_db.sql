@@ -289,6 +289,7 @@ CREATE TABLE `dlm_customer` (
   `name` varchar(100) NOT NULL COMMENT '姓名',
   `mobile` varchar(255) NOT NULL COMMENT '手机号',
   `date` varchar(50) NOT NULL COMMENT '推荐时间',
+  `courseName` varchar(100) NOT NULL COMMENT '课程名称',
   `money` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '预估佣金',
   `moneyStatus` tinyint(1) NOT NULL DEFAULT '1' COMMENT '佣金结算状态 1:待结算 2:已结算',
   `type` varchar(255) NOT NULL COMMENT '1,体验课，2，加盟课',
