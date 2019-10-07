@@ -50,17 +50,40 @@ class PersonalDataService extends BaseService
             }
 
             if ($falg) {
-
-                $member_data = $this->getUserInfo(['openid' => $authorize_data['openid']]);
-
                 $response_data = [
                     'openid' => $authorize_data['openid'],
-                    'is_binding' => $member_data['data']['is_binding'],
-                    'nickName' => $member_data['data']['nickName'],
-                    'mobile' => $member_data['data']['mobile'],
-                    'faceImg' => $member_data['data']['faceImg'],
-                    'role' => $member_data['data']['role']
                 ];
+
+                /*获取会员信息*/
+                $member = $this->model::select(['id', 'nickname as nickName', 'avatar as faceImg', 'mobile'])
+                    ->where('openid', $authorize_data['openid'])
+                    ->first();
+
+                if (!empty($member)) {
+                    /*会员身份 1，普通用户，2，推广员*/
+                    $guider = Guider::where('member_id', $member->id)->exists();
+                    $member['role'] = $guider ? 2 : 1;
+                    /*是否绑定了手机号*/
+                    if (!empty($member->mobile)) {
+                        $member['is_binding'] = 1;
+                    } else {
+                        $member['is_binding'] = 0;
+                    }
+
+                    $response_data['is_binding'] = $member['is_binding'];
+                    $response_data['nickName'] = $member['nickName'];
+                    $response_data['mobile'] = $member['mobile'];
+                    $response_data['faceImg'] = $member['faceImg'];
+                    $response_data['role'] = $member['role'];
+                } else {
+                    $response_data['is_binding'] = 0;
+                    $response_data['nickName'] = '';
+                    $response_data['mobile'] = '';
+                    $response_data['faceImg'] = '';
+                    $response_data['role'] = 1;
+                }
+
+                //$member_data = $this->getUserInfo(['openid' => $authorize_data['openid']]);
                 return $this->formatResponse(0, 'ok', $response_data);
             } else {
                 $response_data = [
