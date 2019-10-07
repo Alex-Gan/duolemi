@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Api;
 
+use App\Models\Customer;
 use App\Models\ExperienceCourse;
 use App\Models\ExperienceProgress;
 use App\Models\Guider;
@@ -181,14 +182,32 @@ class FreeCourseService extends BaseService
                     /*推广佣金*/
                     $superOpenid = $attach_arr['superOpenid'];
                     if (!empty($superOpenid)) {
-                        $member = Member::where('openid', $superOpenid)->first();
-                        if (!empty($member)) {
-                            $guider = Guider::where('member_id', $member->id)->first();
+                        $super_member = Member::where('openid', $superOpenid)->first();
+                        if (!empty($super_member)) {
+                            $guider = Guider::where('member_id', $super_member->id)->first();
                             if (!empty($guider)) {
                                 /*体验课返利佣金*/
                                 $expect_comission = ExperienceCourse::where('id', $attach_arr['experience_course_id'])->value('rebate_commission');
                                 Guider::where('id', $guider->id)->increment('team_experience_size');
                                 Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
+
+                                /*课程名称*/
+                                $courseName = ExperienceCourse::where('id', $attach_arr['experience_course_id'])->value('name');
+                                
+                                /*我的客户*/
+                                Customer::create([
+                                    'member_id' => $member->id,
+                                    'superior_member_id' => $super_member->id,
+                                    'faceImg' => $member->avatar,
+                                    'name' => $member->nickname,
+                                    'mobile' => $member->mobile,
+                                    'date' => date("Y-m-d H:i:s", time()),
+                                    'money' => $expect_comission,
+                                    'type' => 1,
+                                    'courseName' => $courseName,
+                                    'source_order_id' => $res->id,
+                                    'created_at' => date("Y-m-d H:i:s", time())
+                                ]);
                             }
                         }
                     }
