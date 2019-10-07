@@ -110,20 +110,18 @@ class PersonalDataService extends BaseService
             return $this->formatResponse(400, $validator->messages()->first());
         }
 
-        $member_has = $this->model::where('openid', $data['openid'])->exists();
-        if ($member_has) {
-            return $this->formatResponse(0, 'ok');
-        }
+        $member = $this->model::where('openid', $data['openid'])->first();
+        if ($member) {
 
-        $res = $this->model::create([
-            'openid' => $data['openid'],
-            'nickname' => $data['nickName'],
-            'avatar' => $data['faceImg'],
-            'created_at' => date("Y-m-d H:i:s", time())
-        ]);
+            $member->nickname = $data['nickName'];
+            $member->avatar = $data['faceImg'];
+            $res = $member->save();
 
-        if ($res) {
-            return $this->formatResponse(0, 'ok');
+            if ($res) {
+                return $this->formatResponse(0, 'ok', $data);
+            } else {
+                return $this->formatResponse(1, '保存失败');
+            }
         } else {
             return $this->formatResponse(1, '保存失败');
         }
