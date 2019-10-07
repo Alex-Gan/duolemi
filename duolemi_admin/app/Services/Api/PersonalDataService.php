@@ -55,11 +55,11 @@ class PersonalDataService extends BaseService
 
                 $response_data = [
                     'openid' => $authorize_data['openid'],
-                    'is_binding' => $member_data->is_binding,
-                    'nickName' => $member_data->nickName,
-                    'mobile' => $member_data->mobile,
-                    'faceImg' => $member_data->faceImg,
-                    'role' => $member_data->role
+                    'is_binding' => $member_data['data']['is_binding'],
+                    'nickName' => $member_data['data']['nickName'],
+                    'mobile' => $member_data['data']['mobile'],
+                    'faceImg' => $member_data['data']['faceImg'],
+                    'role' => $member_data['data']['role']
                 ];
                 return $this->formatResponse(0, 'ok', $response_data);
             } else {
