@@ -215,7 +215,7 @@ class CommissionService extends BaseService
     public function myCustomer($data)
     {
         $openid = $data['openid'];
-        $keyword = $data['keyword']; //关键词，根据客户名称或手机号搜索
+        $keyword = !empty($data['keyword']) ? $data['keyword'] : ''; //关键词，根据客户名称或手机号搜索
 
         if (empty($openid)) {
             return $this->formatResponse(1, 'openid不能为空');
