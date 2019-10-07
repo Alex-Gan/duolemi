@@ -50,8 +50,16 @@ class PersonalDataService extends BaseService
             }
 
             if ($falg) {
+
+                $member_data = $this->getUserInfo(['openid' => $authorize_data['openid']]);
+
                 $response_data = [
-                    'openid' => $authorize_data['openid']
+                    'openid' => $authorize_data['openid'],
+                    'is_binding' => $member_data->is_binding,
+                    'nickName' => $member_data->nickName,
+                    'mobile' => $member_data->mobile,
+                    'faceImg' => $member_data->faceImg,
+                    'role' => $member_data->role
                 ];
                 return $this->formatResponse(0, 'ok', $response_data);
             } else {

@@ -255,29 +255,29 @@ class CommissionService extends BaseService
 
                 /*状态*/
                 if ($item['status'] == 1) {
-                    $item['status'] = '已购买';
+                    $item['status_text'] = '已购买';
                 } else if ($item['status'] == 2) {
-                    $item['status'] = '已面试';
+                    $item['status_text'] = '已面试';
                 } else if ($item['status'] == 3) {
-                    $item['status'] = '正在体验';
+                    $item['status_text'] = '正在体验';
                 } else if ($item['status'] == 4) {
-                    $item['status'] = '体验完成';
+                    $item['status_text'] = '体验完成';
                 }
             } else {
                 $item['type_text'] = '加盟课';
 
                 if ($item['status'] == 1) {
-                    $item['status'] = '信息已提交';
+                    $item['status_text'] = '信息已提交';
                 } else if ($item['status'] == 2) {
-                    $item['status'] = '资质已审核';
+                    $item['status_text'] = '资质已审核';
                 } else if ($item['status'] == 3) {
-                    $item['status'] = '教师培训';
+                    $item['status_text'] = '教师培训';
                 } else if ($item['status'] == 4) {
-                    $item['status'] = '已开课';
+                    $item['status_text'] = '已开课';
                 } else if ($item['status'] == 5) {
-                    $item['status'] = '加盟完成';
+                    $item['status_text'] = '加盟完成';
                 } else if ($item['status'] == 6) {
-                    $item['status'] = '已结算返佣';
+                    $item['status_text'] = '已结算返佣';
                 }
             }
 
@@ -332,13 +332,13 @@ class CommissionService extends BaseService
             foreach ($experience_progress as &$item) {
                 /*状态*/
                 if ($item['status'] == 1) {
-                    $item['status'] = '已购买';
+                    $item['status_text'] = '已购买';
                 } else if ($item['status'] == 2) {
-                    $item['status'] = '已面试';
+                    $item['status_text'] = '已面试';
                 } else if ($item['status'] == 3) {
-                    $item['status'] = '正在体验';
+                    $item['status_text'] = '正在体验';
                 } else if ($item['status'] == 4) {
-                    $item['status'] = '体验完成';
+                    $item['status_text'] = '体验完成';
                 }
             }
         } else { //加盟课
@@ -349,17 +349,17 @@ class CommissionService extends BaseService
             foreach ($experience_progress as &$item) {
                 /*状态*/
                 if ($item['status'] == 1) {
-                    $item['status'] = '信息已提交';
+                    $item['status_text'] = '信息已提交';
                 } else if ($item['status'] == 2) {
-                    $item['status'] = '资质已审核';
+                    $item['status_text'] = '资质已审核';
                 } else if ($item['status'] == 3) {
-                    $item['status'] = '教师培训';
+                    $item['status_text'] = '教师培训';
                 } else if ($item['status'] == 4) {
-                    $item['status'] = '已开课';
+                    $item['status_text'] = '已开课';
                 } else if ($item['status'] == 5) {
-                    $item['status'] = '加盟完成';
+                    $item['status_text'] = '加盟完成';
                 } else if ($item['status'] == 6) {
-                    $item['status'] = '已结算返佣';
+                    $item['status_text'] = '已结算返佣';
                 }
             }
         }
