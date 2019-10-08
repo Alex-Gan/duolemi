@@ -7,8 +7,11 @@
  */
 namespace App\Services;
 
+use App\Models\Customer;
 use App\Models\FranchiseApply;
+use App\Models\FranchiseCourse;
 use App\Models\FranchiseCourseProgress;
+use App\Models\Guider;
 
 class FranchiseApplyService extends BaseService
 {
@@ -156,11 +159,41 @@ class FranchiseApplyService extends BaseService
     public function handle($id, $data)
     {
         $franchise_apply = FranchiseApply::find($id);
+        if ($franchise_apply->status == $data['status']) {
+            return [
+                'code' => 1,
+                'msg'  => '无需重复执行此操作'
+            ];
+        }
+
         $franchise_apply->status = intval($data['status']);
         $franchise_apply->lately_handle_at = date("Y-m-d H:i:s", time());
+
+
         $res = $franchise_apply->save();
 
         if ($res) {
+            //更改我的顾客状态
+            Customer::where('source_order_id', $id)->where('type', 2)->update(['status' => $data['status']]);
+
+            /*如果状态为已结算返佣,需给用户返佣*/
+            if ($data['status'] == 6) {
+                Customer::where('source_order_id', $id)->where('type', 2)->update(['moneyStatus' => 2]);
+
+                $new_franchise_apply = FranchiseApply::find($id);
+
+                /*佣金返利*/
+                $rebate_commission = FranchiseCourse::where('id', $new_franchise_apply->franchise_course_id)->value('rebate_commission');
+
+                /*返利给上级*/
+                $customer = Customer::where('source_order_id', $id)->where('type', 2)->first();
+                if (!empty($customer)) {
+                    Guider::where('member_id', $customer->superior_member_id)->increment('total_comission', $rebate_commission); //累计佣金
+                    Guider::where('member_id', $customer->superior_member_id)->increment('comission', $rebate_commission); //佣金余额
+                    Guider::where('member_id', $customer->superior_member_id)->decrement('expect_comission', $rebate_commission); //待结算佣金
+                }
+            }
+
             FranchiseCourseProgress::create([
                 'member_id' => $franchise_apply->member_id,
                 'franchise_course_id' => $franchise_apply->franchise_course_id,

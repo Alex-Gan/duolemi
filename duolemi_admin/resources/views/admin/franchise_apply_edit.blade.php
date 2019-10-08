@@ -92,7 +92,7 @@
                 处理进度
             </label>
             <div class="layui-input-inline">
-                <select name="status" lay-verify="required" lay-search="" lay-filter="type" style="height: 30px;">
+                <select name="status" id="status_id" lay-verify="required" lay-search="" lay-filter="type" style="height: 30px;">
                     <option value="1" @if($data->status == 1) selected  @endif>信息已提交</option>
                     <option value="2" @if($data->status == 2) selected  @endif>资质已审核</option>
                     <option value="3" @if($data->status == 3) selected  @endif>教师培训</option>
@@ -142,6 +142,51 @@
 
         //监听提交
         form.on('submit(save)', function(data) {
+            //已完成时给与二次确认提示
+            var status_val = data.field.status;
+
+            if (status_val == 6) {
+
+                layer.confirm('执行此操作将给推广员结算佣金，确定要执行吗？', {
+                    btn : [ '确定', '取消' ]//按钮
+                }, function(index) {
+                    layer.close(index);
+                    console.log('我点击的是确认');
+
+                    //开启load，防止重复提交
+                    var index = layer.load();
+
+                    $.ajax({
+                        url: "/admin/franchise_apply/handle/"+"{{$data->id}}",
+                        data: data.field,
+                        type: "PUT",
+                        dataType: "json",
+                        success:function(res) {
+                            layer.close(index);
+
+                            if (res.code == 0) {
+                                layer.msg('保存成功!', {icon: 1, time: 1000});
+                                setTimeout(function () {
+                                    window.location.href="/admin/franchise_apply/list";
+                                }, 1100);
+                            } else {
+                                layer.msg(res.msg);
+                                return false;
+                            }
+                        },
+                        error:function(data){
+                            $.messager.alert('错误',data.msg);
+                        }
+                    });
+                    return false;
+
+                }, function () {
+                    layer.close(index);
+                    console.log('我点击的是取消');
+                });
+                return  false;
+            }
+
             //开启load，防止重复提交
             var index = layer.load();
 
