@@ -7,7 +7,12 @@
  */
 namespace App\Services;
 
+use App\Models\Customer;
+use App\Models\ExperienceCourse;
 use App\Models\ExperienceProgress;
+use App\Models\FranchiseApply;
+use App\Models\FranchiseCourse;
+use App\Models\Guider;
 use App\Models\PurchaseHistory;
 
 class PurchaseHistoryService extends BaseService
@@ -144,10 +149,41 @@ class PurchaseHistoryService extends BaseService
     public function handle($id, $data)
     {
         $purchase_history = PurchaseHistory::find($id);
+
+        if ($purchase_history->status == $data['status']) {
+            return [
+                'code' => 1,
+                'msg'  => '无需重复执行此操作'
+            ];
+        }
+
         $purchase_history->status = intval($data['status']);
         $res = $purchase_history->save();
 
         if ($res) {
+
+            //更改我的顾客状态
+            Customer::where('source_order_id', $id)->where('type', 1)->update(['status' => $data['status']]);
+
+            /*如果状态为已结算返佣,需给用户返佣*/
+            if ($data['status'] == 4) {
+                Customer::where('source_order_id', $id)->where('type', 1)->update(['moneyStatus' => 2]);
+
+                $new_purchase_history = PurchaseHistory::find($id);
+
+                /*佣金返利*/
+                $rebate_commission = ExperienceCourse::where('id', $new_purchase_history->experience_course_id)->value('rebate_commission');
+
+                /*返利给上级*/
+                $customer = Customer::where('source_order_id', $id)->where('type', 1)->first();
+
+                if (!empty($customer)) {
+                    Guider::where('member_id', $customer->superior_member_id)->increment('total_comission', $rebate_commission); //累计佣金
+                    Guider::where('member_id', $customer->superior_member_id)->increment('comission', $rebate_commission); //佣金余额
+                    Guider::where('member_id', $customer->superior_member_id)->decrement('expect_comission', $rebate_commission); //待结算佣金
+                }
+            }
+
             ExperienceProgress::create([
                 'member_id' => $purchase_history->member_id,
                 'experience_course_id' => $purchase_history->experience_course_id,
