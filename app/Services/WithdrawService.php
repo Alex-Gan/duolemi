@@ -7,6 +7,7 @@
  */
 namespace App\Services;
 
+use App\Models\Guider;
 use App\Models\Withdraw;
 
 class WithdrawService extends BaseService
@@ -114,6 +115,12 @@ class WithdrawService extends BaseService
         $model = $this->model::find($id);
         $model->status = 2;
         if ($model->save()) {
+
+            /*扣除用户余额*/
+            $member_id = $model->member_id;
+            Guider::where('member_id', $member_id)->increment('total_withdraw_comission', $model->apply_money); //累计提现
+            Guider::where('member_id', $member_id)->decrement('comission', $model->apply_money); //佣金余额
+
             return [
                 'code' => 0,
                 'msg'  => '审核成功'
