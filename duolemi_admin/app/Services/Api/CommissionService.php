@@ -89,6 +89,12 @@ class CommissionService extends BaseService
             return $this->formatResponse(1, '申请金额不低于100，且只能是100的整数倍');
         }
 
+        /*检验当前用户余额*/
+        $guider = Guider::where('member_id', $member->id)->first();
+        if (empty($guider) || $guider->comission < $data['applyMoney']) {
+            return $this->formatResponse(1, '当前用户余额不足');
+        }
+
         /*同一个用户同一时间只能有一笔待审核提现申请*/
         $withdraw_has = Withdraw::where('member_id', $member->id)->where('status', 1)->exists();
         if ($withdraw_has) {
