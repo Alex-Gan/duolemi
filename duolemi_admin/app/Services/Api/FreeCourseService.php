@@ -401,7 +401,7 @@ class FreeCourseService extends BaseService
     {
         try {
             $bg = public_path()."/images1/experience_course_template.jpg";
-            $file_code = public_path()."/images1/code.jpg";
+            $file_code = public_path()."/images1/code.jpeg";
             $img_bg = imagecreatefromjpeg($bg); //背景图
             $img_code = imagecreatefromjpeg($file_code);//二维码
             $user_head = imagecreatefromjpeg($member->avatar); //用户头像
