@@ -491,7 +491,7 @@ class FreeCourseService extends BaseService
         $access_token = $this->getAccessToken();
         $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$access_token;
         $data = [
-            'scene' => 'id='.$id.'&s_mid='.$member_id,
+            'scene' => 's_mid='.$member_id.'&id='.$id,
             'page' => 'pages/class-detail/index',
             'width' => 300
         ];
