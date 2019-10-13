@@ -388,22 +388,22 @@ class FreeCourseService extends BaseService
         }
 
         /*开始生成海报*/
-        return $this->makeFreeCourseCode($member);
+        return $this->makeFreeCourseCode($member, $id);
     }
 
     /**
      * 生成海报
      *
      * @param $member
-     * @return array
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    private function makeFreeCourseCode($member)
+    private function makeFreeCourseCode($member, $id)
     {
         try {
             $bg = public_path()."/images1/experience_course_template.jpg";
-            $file_code = public_path()."/images1/code.jpeg";
             $img_bg = imagecreatefromjpeg($bg); //背景图
-            $img_code = imagecreatefromjpeg($file_code);//二维码
+            $img_code = $this->getwxacodeunlimit($id, $member->id);//二维码
             $user_head = imagecreatefromjpeg($member->avatar); //用户头像
 
             //获取背景图的宽高
@@ -430,8 +430,8 @@ class FreeCourseService extends BaseService
             imagettftext($im, $font_size, 0, 300, 550, $color, $font_file, $title);
             imagettftext($im, $font_size, 0, 300, 680, $color, $font_file, $title1);
 
-            $width_code = 258;
-            $height_code = 258;
+            $width_code = 300;
+            $height_code = 300;
 
             /*开始合成*/
             imagecopymerge($im, $img_code, $width - $width_code - 500, $height - $height_code - 100, 0, 0, $width_code, $height_code, 100);
@@ -476,5 +476,30 @@ class FreeCourseService extends BaseService
                 return false;
             }
         }
+    }
+
+    /**
+     * 获取小程序码(适用于需要的码数量极多的业务场景)
+     *
+     * @param $id
+     * @param $member_id
+     * @return false|resource
+     * @throws \Exception
+     */
+    public function getwxacodeunlimit($id, $member_id)
+    {
+        $access_token = $this->getAccessToken();
+        $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$access_token;
+        $data = [
+            'scene' => 'id='.$id.'&s_mid='.$member_id,
+            'page' => 'pages/class-detail/index',
+            'width' => 300
+        ];
+
+        $response = curl_request($url, "POST", json_encode($data));
+
+        $images = imagecreatefromstring($response);
+
+        return $images;
     }
 }

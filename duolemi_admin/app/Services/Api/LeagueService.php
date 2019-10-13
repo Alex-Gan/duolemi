@@ -225,7 +225,12 @@ class LeagueService extends BaseService
      */
     public function leagueCode($data)
     {
+        $id = !empty($data['id']) ? intval($data['id']) : '';
         $openid = !empty($data['openid']) ? $data['openid'] : '';
+
+        if ($id == '') {
+            return $this->formatResponse(404, '加盟课id为空');
+        }
 
         /*效验身份是否存在*/
         $member = Member::where('openid', $openid)->first();
@@ -234,14 +239,16 @@ class LeagueService extends BaseService
         }
 
         /*开始生成海报*/
-        $free_course_code = $this->makeLeagueCode($member);
+        return $this->makeLeagueCode($member, $id);
 
+        /*
         if ($free_course_code['code'] == 0) {
-            /*创建推客*/
+            //创建推客
             $this->createGuider($member->id);
 
             return $this->formatResponse(0, 'ok', $free_course_code['data']);
         }
+        */
     }
 
     /**
@@ -250,13 +257,12 @@ class LeagueService extends BaseService
      * @param $member
      * @return array
      */
-    private function makeLeagueCode($member)
+    private function makeLeagueCode($member, $id)
     {
         try {
             $bg = public_path()."/images1/experience_course_template.jpg";
-            $file_code = public_path()."/images1/code.jpeg";
             $img_bg = imagecreatefromjpeg($bg); //背景图
-            $img_code = imagecreatefromjpeg($file_code);//二维码
+            $img_code = $this->getwxacodeunlimit($id, $member->id);//二维码
             $user_head = imagecreatefromjpeg($member->avatar); //用户头像
 
             //获取背景图的宽高
@@ -283,8 +289,8 @@ class LeagueService extends BaseService
             imagettftext($im, $font_size, 0, 300, 550, $color, $font_file, $title);
             imagettftext($im, $font_size, 0, 300, 680, $color, $font_file, $title1);
 
-            $width_code = 258;
-            $height_code = 258;
+            $width_code = 300;
+            $height_code = 300;
 
             /*开始合成*/
             imagecopymerge($im, $img_code, $width - $width_code - 500, $height - $height_code - 100, 0, 0, $width_code, $height_code, 100);
@@ -293,9 +299,12 @@ class LeagueService extends BaseService
             $relative_path = '/images1/user_experience_course/league_code_user_'.$member->id.'.png';
             imagepng($im, public_path($relative_path));
 
-            return ['code' => 0, 'msg' => 'ok', 'data' => ['code' => env('APP_URL').$relative_path]];
+            /*创建推客*/
+            $this->createGuider($member->id);
+
+            return $this->formatResponse(0, 'ok', ['code' => env('APP_URL').$relative_path]);
         } catch (\Exception $exception) {
-            return ['code' => 1, 'msg' => $exception->getMessage()];
+            return $this->formatResponse(1, $exception->getMessage());
         }
     }
 
@@ -326,5 +335,30 @@ class LeagueService extends BaseService
                 return false;
             }
         }
+    }
+
+    /**
+     * 获取小程序码(适用于需要的码数量极多的业务场景)
+     *
+     * @param $id
+     * @param $member_id
+     * @return false|resource
+     * @throws \Exception
+     */
+    public function getwxacodeunlimit($id, $member_id)
+    {
+        $access_token = $this->getAccessToken();
+        $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$access_token;
+        $data = [
+            'scene' => 'id='.$id.'&s_mid='.$member_id,
+            'page' => 'pages/league-detail/index',
+            'width' => 300
+        ];
+
+        $response = curl_request($url, "POST", json_encode($data));
+
+        $images = imagecreatefromstring($response);
+
+        return $images;
     }
 }
