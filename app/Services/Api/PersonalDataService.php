@@ -334,10 +334,41 @@ class PersonalDataService extends BaseService
             ]);
         }
 
+        $code_img = $this->getwxacodeunlimit($member->id);
+
         $data = [
-            'code' => env('APP_URL').'/images1/code.jpeg'
+            'code' => $code_img
         ];
 
         return $this->formatResponse(0, 'ok', $data);
+    }
+
+    /**
+     * 获取小程序码(适用于需要的码数量极多的业务场景)
+     *
+     * @param $member_id
+     * @return false|resource
+     * @throws \Exception
+     */
+    public function getwxacodeunlimit($member_id)
+    {
+        $access_token = $this->getAccessToken();
+        $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$access_token;
+        $data = [
+            'scene' => 's_mid='.$member_id,
+            'page' => 'pages/index/index',
+            'width' => 300
+        ];
+
+        $response = curl_request($url, "POST", json_encode($data));
+
+        $images = imagecreatefromstring($response);
+
+        /*保存路径*/
+        $relative_path = '/images1/user_personal/user_personal_code_'.$member_id.'.png';
+        
+        imagepng($images, public_path($relative_path));
+
+        return env('APP_URL').$relative_path;
     }
 }
