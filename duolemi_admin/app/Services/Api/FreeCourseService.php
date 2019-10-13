@@ -112,7 +112,7 @@ class FreeCourseService extends BaseService
             'experience_course_id' => $id,
             'name' => $data['name'],
             'mobile' => $data['mobile'],
-            'superOpenid' => !empty($data['superOpenid'])? $data['superOpenid'] : ''
+            's_mid' => !empty($data['s_mid'])? intval($data['s_mid']) : ''
         ];
 
         /*支付金额*/
@@ -180,9 +180,9 @@ class FreeCourseService extends BaseService
                     $res = PurchaseHistory::create($create_data);
 
                     /*推广佣金*/
-                    $superOpenid = $attach_arr['superOpenid'];
-                    if (!empty($superOpenid)) {
-                        $super_member = Member::where('openid', $superOpenid)->first();
+                    $s_mid = $attach_arr['s_mid'];
+                    if (!empty($s_mid)) {
+                        $super_member = Member::where('id', $s_mid)->first();
                         if (!empty($super_member)) {
                             $guider = Guider::where('member_id', $super_member->id)->first();
                             if (!empty($guider)) {
