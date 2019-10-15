@@ -113,6 +113,10 @@ class CommissionService extends BaseService
         ]);
 
         if ($res) {
+
+            /*先扣除当前用户余额*/
+            Guider::where('member_id', $member->id)->decrement('comission', $data['applyMoney']);
+
             return $this->formatResponse(0, '提现申请成功');
         } else {
             return $this->formatResponse(1, '提现申请失败');
