@@ -183,11 +183,15 @@ class CommissionService extends BaseService
         }
 
         /*提现人相关信息*/
-        $withdraw = Withdraw::select(['real_name as realName', 'bank_name as bankName', 'branch_name as branchName', 'bank_account as bankAccount
-', 'apply_money as account'])
+        $withdraw = Withdraw::select(['real_name as realName', 'bank_name as bankName', 'branch_name as branchName', 'bank_account as bankAccount'])
             ->where('member_id', $member->id)
             ->orderBy('created_at', 'desc')
             ->first();
+
+        /*可提现余额*/
+        $comission = Guider::where('member_id', $member->id)->value('comission');
+
+        $withdraw['account'] = !empty($comission) ? $comission : 0;
 
         if (empty($withdraw)) {
             $withdraw = [];
