@@ -130,7 +130,7 @@ class LeagueService extends BaseService
 
         if ($res) {
             /*推广佣金*/
-            $s_mid = $data['s_mid'];
+            $s_mid = !empty($data['s_mid']) ? intval($data['s_mid']) : '';
 
             if (!empty($s_mid)) {
                 $super_member = Member::where('id', $s_mid)->first();
