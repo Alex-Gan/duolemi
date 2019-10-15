@@ -132,7 +132,10 @@ class LeagueService extends BaseService
             /*推广佣金*/
             $s_mid = !empty($data['s_mid']) ? intval($data['s_mid']) : '';
 
-            if (!empty($s_mid)) {
+            \Log::info("申请加盟上级id:".$s_mid);
+
+            //如果是本人自己购买自己则不返利
+            if (!empty($s_mid) && ($member->id != $s_mid)) {
                 $super_member = Member::where('id', $s_mid)->first();
                 if (!empty($super_member)) {
                     $guider = Guider::where('member_id', $super_member->id)->first();
