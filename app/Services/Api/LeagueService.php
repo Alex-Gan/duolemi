@@ -140,28 +140,39 @@ class LeagueService extends BaseService
                 if (!empty($super_member)) {
                     $guider = Guider::where('member_id', $super_member->id)->first();
                     if (!empty($guider)) {
-                        /*加盟课返利佣金*/
-                        $expect_comission = FranchiseCourse::where('id', $res->franchise_course_id)->value('rebate_commission');
-                        Guider::where('id', $guider->id)->increment('team_join_size');
-                        Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
 
-                        /*课程名称*/
-                        $courseName = FranchiseCourse::where('id', $res->franchise_course_id)->value('title');
+                        \DB::beginTransaction(); /*开启事务*/
 
-                        /*我的客户*/
-                        Customer::create([
-                            'member_id' => $member->id,
-                            'superior_member_id' => $super_member->id,
-                            'faceImg' => $member->avatar,
-                            'name' => $member->nickname,
-                            'mobile' => $member->mobile,
-                            'date' => date("Y-m-d H:i:s", time()),
-                            'money' => $expect_comission,
-                            'type' => 2,
-                            'courseName' => $courseName,
-                            'source_order_id' => $res->id,
-                            'created_at' => date("Y-m-d H:i:s", time())
-                        ]);
+                        try{
+                            /*加盟课返利佣金*/
+                            $expect_comission = FranchiseCourse::where('id', $res->franchise_course_id)->value('rebate_commission');
+                            Guider::where('id', $guider->id)->increment('team_join_size');
+                            Guider::where('id', $guider->id)->increment('expect_comission', $expect_comission);
+
+                            /*课程名称*/
+                            $courseName = FranchiseCourse::where('id', $res->franchise_course_id)->value('title');
+
+                            /*我的客户*/
+                            Customer::create([
+                                'member_id' => $member->id,
+                                'superior_member_id' => $super_member->id,
+                                'faceImg' => $member->avatar,
+                                'name' => $member->nickname,
+                                'mobile' => $member->mobile,
+                                'date' => date("Y-m-d H:i:s", time()),
+                                'money' => $expect_comission,
+                                'type' => 2,
+                                'courseName' => $courseName,
+                                'source_order_id' => $res->id,
+                                'created_at' => date("Y-m-d H:i:s", time())
+                            ]);
+
+                            \DB::commit(); /*提交事务*/
+                        } catch (\Exception $e) {
+                            \DB::rollBack(); /*事务回滚*/
+
+                            \Log::error("加盟返利失败 :".$e->getMessage());
+                        }
                     }
                 }
             }
