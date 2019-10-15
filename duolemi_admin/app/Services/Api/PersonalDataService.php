@@ -366,7 +366,7 @@ class PersonalDataService extends BaseService
 
         /*保存路径*/
         $relative_path = '/images1/user_personal/user_personal_code_'.$member_id.'.png';
-        
+
         imagepng($images, public_path($relative_path));
 
         return env('APP_URL').$relative_path;
