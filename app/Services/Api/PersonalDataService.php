@@ -60,6 +60,9 @@ class PersonalDataService extends BaseService
                     ->first();
 
                 if (!empty($member)) {
+                    //id值
+                    $response_data['id'] = $member->id;
+
                     /*会员身份 1，普通用户，2，推广员*/
                     $guider = Guider::where('member_id', $member->id)->exists();
                     $member['role'] = $guider ? 2 : 1;
@@ -76,6 +79,7 @@ class PersonalDataService extends BaseService
                     $response_data['faceImg'] = $member['faceImg'];
                     $response_data['role'] = $member['role'];
                 } else {
+                    $response_data['id'] = 0;
                     $response_data['is_binding'] = 0;
                     $response_data['nickName'] = '';
                     $response_data['mobile'] = '';
