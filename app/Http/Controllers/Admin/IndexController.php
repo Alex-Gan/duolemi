@@ -22,7 +22,7 @@ class IndexController extends BaseController
         //用户信息
         $userData = $this->getUserData($request);
         //获取菜单
-        $menu = $this->getMenuList();
+        $menu = $this->getMenuList($request);
         return View('admin/index', $userData)->with('menu', $menu);
     }
 

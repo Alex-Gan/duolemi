@@ -17,9 +17,9 @@ class BaseController
      *
      * @return array
      */
-    public function getMenuList()
+    public function getMenuList($request)
     {
-        return (new BaseService)->getMenuList();
+        return (new BaseService)->getMenuList($request);
     }
 
     /**

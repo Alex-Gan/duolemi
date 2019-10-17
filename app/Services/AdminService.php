@@ -20,13 +20,13 @@ class AdminService extends BaseService
      * MemberService constructor.
      * @param Member $member
      */
-    public function __construct(Member $member)
+    public function __construct(Admin $admin)
     {
-        $this->model = $member;
+        $this->model = $admin;
     }
 
     /**
-     * 列表
+     * 账号列表
      *
      * @param $params
      * @return array
@@ -38,11 +38,16 @@ class AdminService extends BaseService
         $offset = $page > 0 ? ($page-1)*$limit : 0;
 
         //搜索条件
-        $nickname   = isset($params['nickname']) ? $params['nickname'] : '';
+        $username = isset($params['username']) ? $params['username'] : '';
+        $nickname = isset($params['nickname']) ? $params['nickname'] : '';
 
         $wheres = [
-            ['column' => 'id', 'value' => 0, 'operator' => '>']
+            ['column' => 'status', 'value' => 1, 'operator' => '=']
         ];
+
+        if (!empty($username)) {
+            $wheres[] = ['column' => 'username', 'value' => $username, 'operator' => '='];
+        }
 
         if (!empty($nickname)) {
             $wheres[] = ['column' => 'nickname', 'value' => $nickname, 'operator' => '='];
@@ -160,4 +165,113 @@ class AdminService extends BaseService
         return $tokenvalue;
     }
 
+    /**
+     * 添加账号
+     *
+     * @param $data
+     * @return array
+     */
+    public function add($data)
+    {
+        /*检验两次输入密码是否一致*/
+        if ($data['password'] != $data['confirmPassword']) {
+            return ['code' => 1, 'msg' => '两次密码不一致'];
+        }
+
+        /*检查账号是否存在*/
+        $admin_has = Admin::where('username', $data['username'])->exists();
+        if ($admin_has) {
+            return ['code' => 1, 'msg' => '该账号已存在'];
+        }
+
+        /*获取加密后的密码以及盐*/
+        $rand_data = $this->randCreatePassword($data['password']);
+
+        $aid = Admin::create([
+            'username'   => $data['username'],
+            'nickname'   => $data['nickname'],
+            'password'   => $rand_data['password'],
+            'salt'       => $rand_data['salt'],
+            'created_at' => date("Y-m-d H:i:s", time())
+        ]);
+
+        if ($aid) {
+            return ['code' => 0, 'msg' => '添加账号成功'];
+        } else {
+            return ['code' => 1, 'msg' => '添加账号失败'];
+        }
+    }
+
+    /**
+     * 管理员数据
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getAdminInfo($id)
+    {
+        return Admin::find($id);
+    }
+
+    /**
+     * 编辑管理员
+     *
+     * @param $id
+     * @param $data
+     * @return array
+     */
+    public function edit($id, $data)
+    {
+        /*检验两次输入密码是否一致*/
+        if ($data['password'] != $data['confirmPassword']) {
+            return ['code' => 1, 'msg' => '两次密码不一致'];
+        }
+
+        /*用户信息*/
+        $admin = Admin::find($id);
+
+        if ($admin->username != $data['username']) {
+            /*检查账号是否存在*/
+            $admin_has = Admin::where('username', $data['username'])->exists();
+            if ($admin_has) {
+                return ['code' => 1, 'msg' => '该账号已存在'];
+            }
+        }
+
+        /*获取加密后的密码以及盐*/
+        $rand_data = $this->randCreatePassword($data['password']);
+
+        $admin->username = $data['username'];
+        $admin->nickname = $data['nickname'];
+        $admin->password = $rand_data['password'];
+        $admin->salt     = $rand_data['salt'];
+        $res = $admin->save();
+
+        if ($res) {
+            return ['code' => 0, 'msg' => '编辑账号成功'];
+        } else {
+            return ['code' => 1, 'msg' => '编辑账号失败'];
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param $id
+     * @return array
+     */
+    public function delete($id)
+    {
+        if ($id == 1) {
+            return ['code' => 1, 'msg' => '管理员不能删除'];
+        }
+
+        $res = Admin::where('id', $id)->update(['status' => -1]);
+
+        if ($res) {
+            return ['code' => 0, 'msg' => '删除成功'];
+        } else {
+            return ['code' => 1, 'msg' => '删除失败'];
+        }
+    }
 }
