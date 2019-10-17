@@ -148,7 +148,7 @@ class WithdrawService extends BaseService
             /*扣除用户余额*/
             $member_id = $model->member_id;
             Guider::where('member_id', $member_id)->increment('comission', $model->apply_money); //佣金余额
-            
+
             return [
                 'code' => 0,
                 'msg'  => '审核成功'

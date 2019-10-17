@@ -145,5 +145,18 @@ return [
                 'srule' => '/admin/article/list'
             ]
         ]
+    ],
+    [
+        'id' => 12,
+        'name' => '账号管理',
+        'icon' => '',
+        'sub_menu' => [
+            [
+                'sid'  => 1,
+                'sname' => '账号列表',
+                'sicon' => '',
+                'srule' => '/admin/admin/list'
+            ]
+        ]
     ]
 ];

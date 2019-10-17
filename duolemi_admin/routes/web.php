@@ -100,6 +100,12 @@ Route::group(['middleware' => ['auth.admin'], 'prefix' => 'admin'], function() {
     Route::post('upload/multi_upload','Common\UploadImageController@upload');
 
     //用户信息修改
+    Route::get('admin/list','Admin\AdminController@list');//管理员列表
+    Route::get('admin/add','Admin\AdminController@addView');//添加管理员页面
+    Route::post('admin/add','Admin\AdminController@add');//添加管理员
+    Route::get('admin/edit/{id}','Admin\AdminController@editView');//编辑管理员页面
+    Route::put('admin/edit/{id}','Admin\AdminController@edit');//编辑管理员
     Route::get('modify','Admin\AdminController@modifyView'); //用户信息显示
     Route::put('modify','Admin\AdminController@modify');//修改用户信息
+    Route::delete('admin/delete/{id}','Admin\AdminController@delete');//删除用户信息
 });

@@ -70,9 +70,16 @@ class BaseService
      *
      * @return array
      */
-    public function getMenuList()
+    public function getMenuList($request)
     {
         $admin_menu = config("adminmenu");
+
+        /*获取session数据*/
+        $session_data = $request->session()->get('sess_admin_user_key');
+        if ($session_data->id != 1) {
+            unset($admin_menu[11]);
+        }
+
         return $admin_menu;
     }
 }
